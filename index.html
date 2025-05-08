@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Resolução de Atendimento</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    label { font-weight: bold; margin-top: 10px; display: block; }
+    textarea, input, select { width: 100%; margin-bottom: 15px; padding: 8px; }
+    button { padding: 10px 20px; background-color: #2f80ed; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Registrar Resolução de Atendimento</h2>
+
+  <form id="resolucaoForm">
+    <label>Nome do Cliente:</label>
+    <input type="text" name="cliente" required>
+
+    <label>Resumo da Situação:</label>
+    <textarea name="resumo" required></textarea>
+
+    <label>Caminho Percorrido no Sistema:</label>
+    <textarea name="caminho"></textarea>
+
+    <label>Ação Realizada:</label>
+    <textarea name="acao" required></textarea>
+
+    <label>Resultado Final:</label>
+    <textarea name="resultado"></textarea>
+
+    <label>Retorno do Cliente:</label>
+    <textarea name="retorno"></textarea>
+
+    <label>Ações Pendentes:</label>
+    <select name="pendente">
+      <option value="Não">Não</option>
+      <option value="Sim">Sim</option>
+    </select>
+
+    <label>Follow-up Necessário?</label>
+    <select name="followup">
+      <option value="Não">Não</option>
+      <option value="Sim">Sim</option>
+    </select>
+
+    <button type="submit">Gerar Resolução</button>
+  </form>
+
+  <pre id="output"></pre>
+
+  <script>
+    document.getElementById('resolucaoForm').onsubmit = function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const dados = {
+        cliente: form.cliente.value,
+        resumo: form.resumo.value,
+        caminho: form.caminho.value,
+        acao: form.acao.value,
+        resultado: form.resultado.value,
+        retorno: form.retorno.value,
+        pendente: form.pendente.value,
+        followup: form.followup.value
+      };
+
+      const texto = `✅ Atendimento Resolvido\n\n🧠 Intenção da(o) Cliente:\n${dados.resumo}\n\n🛠️ Ação Técnica Realizada:\n${dados.acao}\n\n📋 Resultado Final:\n${dados.resultado}\n\n📩 Retorno da(o) Cliente:\n${dados.retorno}\n\n📌 Ações Pendentes:\n${dados.pendente}\n\n🔁 Follow-up:\n${dados.followup}`;
+      document.getElementById('output').textContent = texto;
+    };
+  </script>
+</body>
+</html>
