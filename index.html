@@ -1,71 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Resolução de Atendimento</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    label { font-weight: bold; margin-top: 10px; display: block; }
-    textarea, input, select { width: 100%; margin-bottom: 15px; padding: 8px; }
-    button { padding: 10px 20px; background-color: #2f80ed; color: white; border: none; cursor: pointer; }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 30px auto;
+      background-color: #fdfdfd;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    h1, h2 {
+      color: #2c3e50;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 6px;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .radio-group label {
+      font-weight: normal;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1a252f;
+    }
   </style>
 </head>
 <body>
-  <h2>Registrar Resolução de Atendimento</h2>
 
-  <form id="resolucaoForm">
-    <label>Nome do Cliente:</label>
-    <input type="text" name="cliente" required>
+  <h1>Formulário de Resolução de Atendimento</h1>
 
-    <label>Resumo da Situação:</label>
-    <textarea name="resumo" required></textarea>
+  <form>
 
-    <label>Caminho Percorrido no Sistema:</label>
-    <textarea name="caminho"></textarea>
+    <h2>1. Dados do Atendimento</h2>
 
-    <label>Ação Realizada:</label>
-    <textarea name="acao" required></textarea>
+    <label for="agente">Agente Responsável:</label>
+    <input type="text" id="agente" name="agente" placeholder="Ex: Nadson Fernandes" required>
 
-    <label>Resultado Final:</label>
-    <textarea name="resultado"></textarea>
+    <label for="cliente">Nome do Cliente:</label>
+    <input type="text" id="cliente" name="cliente" placeholder="Nome do cliente atendido" required>
 
-    <label>Retorno do Cliente:</label>
-    <textarea name="retorno"></textarea>
+    <label for="intencao">Intenção do Cliente (Customer Intent):</label>
+    <textarea id="intencao" rows="3" placeholder="Descreva o que o cliente deseja ou relatou no início do atendimento"></textarea>
 
-    <label>Ações Pendentes:</label>
-    <select name="pendente">
-      <option value="Não">Não</option>
-      <option value="Sim">Sim</option>
+    <h2>2. Resumo da Conversa</h2>
+
+    <label for="resumo">Resumo do Atendimento:</label>
+    <textarea id="resumo" rows="4" placeholder="Explique de forma objetiva o que foi tratado com o cliente."></textarea>
+
+    <h2>3. Ações Realizadas</h2>
+
+    <label for="acoes">Passo a Passo da Solução:</label>
+    <textarea id="acoes" rows="6" placeholder="1. Acessado banco de dados...&#10;2. Ajuste na configuração XYZ...&#10;3. Cliente foi orientado a..."></textarea>
+
+    <label for="status">Status Final:</label>
+    <select id="status" name="status">
+      <option value="resolvido">Resolvido</option>
+      <option value="em_analise">Em Análise</option>
+      <option value="encaminhado">Encaminhado para outro setor</option>
     </select>
 
-    <label>Follow-up Necessário?</label>
-    <select name="followup">
-      <option value="Não">Não</option>
-      <option value="Sim">Sim</option>
-    </select>
+    <h2>4. Pendências</h2>
 
-    <button type="submit">Gerar Resolução</button>
+    <label for="followup">Itens de Follow-up (se houver):</label>
+    <textarea id="followup" rows="3" placeholder="Ex: Aguardando confirmação do cliente, ou: Nenhuma pendência."></textarea>
+
+    <h2>5. Aba do Sistema</h2>
+
+    <label>Qual aba do sistema se refere o atendimento?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="aba_sistema" value="Dashboard" required> Dashboard</label>
+      <label><input type="radio" name="aba_sistema" value="Consultório"> Consultório</label>
+      <label><input type="radio" name="aba_sistema" value="Call"> Call</label>
+      <label><input type="radio" name="aba_sistema" value="Calendário"> Calendário</label>
+      <label><input type="radio" name="aba_sistema" value="Prontuário"> Prontuário</label>
+      <label><input type="radio" name="aba_sistema" value="NF-e"> NF-e</label>
+      <label><input type="radio" name="aba_sistema" value="Financeiro"> Financeiro</label>
+      <label><input type="radio" name="aba_sistema" value="GED"> GED</label>
+      <label><input type="radio" name="aba_sistema" value="Config"> Config</label>
+      <label><input type="radio" name="aba_sistema" value="Outros"> Outros</label>
+    </div>
+
+    <button type="submit">Salvar Resolução</button>
+
   </form>
 
-  <pre id="output"></pre>
-
-  <script>
-    document.getElementById('resolucaoForm').onsubmit = function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const dados = {
-        cliente: form.cliente.value,
-        resumo: form.resumo.value,
-        caminho: form.caminho.value,
-        acao: form.acao.value,
-        resultado: form.resultado.value,
-        retorno: form.retorno.value,
-        pendente: form.pendente.value,
-        followup: form.followup.value
-      };
-
-      const texto = `✅ Atendimento Resolvido\n\n🧠 Intenção da(o) Cliente:\n${dados.resumo}\n\n🛠️ Ação Técnica Realizada:\n${dados.acao}\n\n📋 Resultado Final:\n${dados.resultado}\n\n📩 Retorno da(o) Cliente:\n${dados.retorno}\n\n📌 Ações Pendentes:\n${dados.pendente}\n\n🔁 Follow-up:\n${dados.followup}`;
-      document.getElementById('output').textContent = texto;
-    };
-  </script>
 </body>
 </html>
