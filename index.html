@@ -24,6 +24,7 @@
       color: white;
       padding: 15px;
       text-align: center;
+      border-radius: 8px;
     }
     .content {
       display: flex;
@@ -36,6 +37,8 @@
       width: 48%;
       background-color: #f7f7f7;
       padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
     }
     textarea {
       width: 100%;
@@ -61,6 +64,45 @@
       padding: 20px;
       background-color: #333;
       color: white;
+      border-radius: 8px;
+    }
+
+    /* Estilos do guia lateral */
+    .guide {
+      background-color: #f0f0f0;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+      height: 100%;
+      overflow-y: auto;
+    }
+    .guide h2 {
+      color: #333;
+      font-size: 1.5em;
+      margin-bottom: 15px;
+    }
+    .guide ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .guide li {
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+    .guide .step {
+      font-weight: bold;
+      color: #1d8eeb;
+    }
+    .guide .step-description {
+      margin-left: 20px;
+      color: #555;
+    }
+    .guide .example {
+      background-color: #e1f5fe;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 15px;
+      color: #333;
     }
   </style>
 </head>
@@ -83,18 +125,36 @@
         <button onclick="gerarResolucao()">Gerar Resolução</button>
       </div>
 
-      <div class="right-panel">
+      <div class="right-panel guide">
         <h2>Guia para Gerar a Resolução</h2>
         <ul>
-          <li>Quais abas do sistema foram acessadas?</li>
-          <li>Quais configurações foram alteradas ou verificadas?</li>
-          <li>Foi necessário alterar dados no banco de dados? Quais tabelas, colunas, ou dados?</li>
-          <li>Se a resolução envolver código, qual query foi utilizada?</li>
+          <li>
+            <span class="step">1. Qual foi o problema ou solicitação do cliente?</span>
+            <p class="step-description">Detalhe o que foi relatado pelo cliente, o que ele esperava e qualquer informação relevante que ele forneceu. Isso inclui o histórico e contexto do problema.</p>
+          </li>
+          <li>
+            <span class="step">2. Quais abas do sistema foram acessadas?</span>
+            <p class="step-description">Explique quais abas ou menus dentro do sistema o agente precisou acessar para realizar o atendimento. Exemplo: "Prontuário > Histórico do paciente" ou "Configurações > Segurança".</p>
+          </li>
+          <li>
+            <span class="step">3. Quais configurações foram alteradas ou verificadas?</span>
+            <p class="step-description">Caso tenha sido necessário alterar configurações, cite as configurações acessadas ou modificadas no sistema, como opções de impressão, permissões de usuário, ou configurações de módulo.</p>
+          </li>
+          <li>
+            <span class="step">4. Alterações realizadas no banco de dados?</span>
+            <p class="step-description">Se houve necessidade de ajustes no banco de dados, descreva quais tabelas e colunas foram alteradas, e se foi utilizada alguma query para ajustar dados. Exemplo: "Tabela: unidadesconfig, Coluna: LIBERAR_ORCAMENTO_MANUAL, Query: UPDATE unidadesconfig SET LIBERAR_ORCAMENTO_MANUAL='S' WHERE ..."</p>
+          </li>
+          <li>
+            <span class="step">5. Qual a resolução técnica aplicada?</span>
+            <p class="step-description">Descreva as ações tomadas, como foi feito o ajuste técnico, e se foi necessário realizar alguma interação manual, como ajustes na interface ou mesmo no código.</p>
+          </li>
         </ul>
 
-        <h3>Exemplo de Resolução:</h3>
-        <p><strong>QUESTÃO DO CLIENTE:</strong> Descreva o problema ou a solicitação do cliente.</p>
-        <p><strong>RESOLUÇÃO:</strong> Descreva a ação técnica realizada, incluindo detalhes como configurações acessadas ou alterações feitas.</p>
+        <div class="example">
+          <h3>Exemplo de Resolução:</h3>
+          <p><strong>QUESTÃO DO CLIENTE:</strong> O cliente relatou que ao tentar imprimir um orçamento gerado manualmente no sistema, o documento estava saindo em branco.</p>
+          <p><strong>RESOLUÇÃO:</strong> Acesse o módulo "Prontuário", vá para "Pre-Op", e altere as configurações de impressão para garantir que todos os dados sejam exibidos corretamente. Após isso, verifique as permissões de acesso e habilite a função de "Gerar Orçamento Manual" no banco de dados, se necessário.</p>
+        </div>
       </div>
     </div>
 
@@ -109,28 +169,42 @@
   </div>
 
   <script>
-    // Função que gera a resolução com base nos resumos fornecidos
-    function gerarResolucao() {
+    const openaiApiKey = 'SUA_CHAVE_DE_API_AQUI'; // Substitua com a sua chave da OpenAI
+
+    async function gerarResolucao() {
       const resumoConversa = document.getElementById('resumoConversa').value;
       const resumoTecnico = document.getElementById('resumoTecnico').value;
 
-      // Concatenando os textos para formar a resolução
-      const resolucao = `
-        🧠 Resumo da conversa com o cliente: ${resumoConversa}
-        🛠️ Resumo técnico do agente: ${resumoTecnico}
-        📋 Resolução Gerada: 
-
-        A resolução será gerada com base nos resumos.
+      const prompt = `
+        Resumo da conversa com o cliente: ${resumoConversa}
+        Resumo técnico do agente: ${resumoTecnico}
+        Gere uma resolução detalhada para o atendimento do cliente.
       `;
 
-      // Exibindo a resolução gerada na página
+      const response = await fetch('https://api.openai.com/v1/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${openaiApiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'text-davinci-003',  // Modelo de linguagem da OpenAI
+          prompt: prompt,
+          max_tokens: 250,
+          temperature: 0.7,
+        }),
+      });
+
+      const data = await response.json();
+      const resolucao = data.choices[0].text.trim();
+
+      // Exibindo a resolução gerada na tela
       document.getElementById('resolucaoTexto').innerText = resolucao;
 
-      // Chamada para enviar os dados ao Google Sheets via Google Apps Script
+      // Chama a função para enviar os dados para o Google Sheets
       enviarParaSheets(resumoConversa, resumoTecnico, resolucao);
     }
 
-    // Função que envia os dados para o Google Sheets via Google Apps Script
     function enviarParaSheets(resumoConversa, resumoTecnico, resolucao) {
       const data = {
         resumoConversa: resumoConversa,
@@ -152,9 +226,10 @@
       })
       .catch((error) => {
         console.error('Erro ao enviar os dados:', error);
-        alert('Erro ao enviar os dados para o Google Sheets.');
+        alert('Erro ao enviar os dados para o Google Sheets!');
       });
     }
   </script>
+
 </body>
 </html>
