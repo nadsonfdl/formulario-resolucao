@@ -1,177 +1,176 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerador de Resoluções - Suporte IGUT</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerador de Resoluções</title>
   <style>
     body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f1f4f8;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
+      padding: 0;
       display: flex;
-      height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
     }
 
     .sidebar {
-      width: 350px;
+      width: 300px;
       background-color: #2c3e50;
       color: white;
       padding: 20px;
-      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     }
 
-    .sidebar h2, .sidebar h3 {
-      color: #ecf0f1;
+    .sidebar h3 {
+      color: #1abc9c;
+      margin-bottom: 10px;
     }
 
     .sidebar p {
-      font-size: 0.9em;
+      font-size: 14px;
       line-height: 1.4;
     }
 
     .main {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-      overflow-y: auto;
+      padding: 30px;
     }
 
-    .section {
-      background: white;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    h2 {
+      margin-bottom: 10px;
+      color: #34495e;
     }
 
     textarea {
       width: 100%;
-      padding: 10px;
-      font-size: 1em;
+      padding: 12px;
       border-radius: 6px;
       border: 1px solid #ccc;
       resize: vertical;
-      margin-top: 5px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     }
 
     button {
-      background-color: #3498db;
-      color: white;
-      border: none;
       padding: 10px 20px;
-      font-size: 1em;
+      border: none;
+      background-color: #1abc9c;
+      color: white;
+      font-size: 16px;
       border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s;
+      margin-bottom: 20px;
     }
 
     button:hover {
-      background-color: #2980b9;
+      background-color: #16a085;
     }
 
-    pre {
+    #resolucaoGerada {
       background-color: #ecf0f1;
-      padding: 15px;
-      border-radius: 6px;
-      white-space: pre-wrap;
-      word-break: break-word;
+      border: 1px solid #ccc;
+      min-height: 150px;
     }
 
-    .footer {
-      padding: 10px;
-      text-align: center;
-      color: #888;
+    .bottom-panel {
+      margin-top: 40px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
   </style>
 </head>
 <body>
-  <div class="sidebar">
-    <h2>📌 Guia para Resoluções</h2>
-    <p>Preencha todos os campos com clareza e detalhe. Inclua:</p>
-    <ul>
-      <li>🧠 Intenção do Cliente: qual problema relatado?</li>
-      <li>📝 Descrição: o que foi mostrado? Como o problema ocorre?</li>
-      <li>🛠️ Ação Técnica: etapas seguidas, sistema ou banco?</li>
-      <li>📋 Resultado: funcionou? O cliente confirmou?</li>
-      <li>📩 Retorno: houve resposta? Ficou pendência?</li>
-    </ul>
-    <h3>⚙️ Detalhamento Técnico</h3>
-    <p>
-      - Quais abas foram acessadas no sistema?<br>
-      - Quais configurações foram alteradas?<br>
-      - Permissões alteradas?<br>
-      - Alguma alteração via banco?<br>
-      - Qual tabela? Qual coluna?<br>
-      - Query utilizada?<br>
-      - Dados ajustados?<br>
-    </p>
-    <h3>📄 Exemplo de Resolução</h3>
-    <p><strong>QUESTÃO DO CLIENTE:</strong> Cliente deseja relatório IR.</p>
-    <p><strong>RESOLUÇÃO:</strong> Acesse Prontuário > Setinha > Declaração IRPF.</p>
-  </div>
-
-  <div class="main">
-    <div class="section">
-      <h3>🧠 Resumo da conversa com o cliente:</h3>
-      <textarea id="client-summary" rows="4"></textarea>
+  <div class="container">
+    <div class="sidebar">
+      <h3>📌 Guia de Resolução</h3>
+      <p><strong>Inclua sempre:</strong></p>
+      <ul>
+        <li>🧠 Intenção do cliente</li>
+        <li>📝 Descrição do problema</li>
+        <li>🛠️ Ações realizadas (com caminhos no sistema)</li>
+        <li>⚙️ Configurações alteradas</li>
+        <li>📊 Acesso ao banco (tabela, coluna, query utilizada)</li>
+        <li>📋 Resultado final e retorno do cliente</li>
+        <li>📌 Ações pendentes e follow-up (se necessário)</li>
+      </ul>
+      <p><strong>Exemplo:</strong></p>
+      <p>
+        Cliente relatou erro ao imprimir orçamento manual. Acessado: Prontuário > PRE-OP > Gerar Orçamento Manual. Ajustado banco: tabela <code>unidadesconfig</code>, campo <code>LIBERAR_ORCAMENTO_MANUAL</code> = "S". No sistema: Config > Filial > aba Margens. Selecionadas opções de impressão. Problema resolvido.
+      </p>
     </div>
 
-    <div class="section">
-      <h3>🛠️ Resumo técnico do agente:</h3>
-      <textarea id="tech-summary" rows="4"></textarea>
-    </div>
+    <div class="main">
+      <h2>🧠 Resumo da conversa com o cliente:</h2>
+      <textarea id="resumoCliente" rows="4" placeholder="Digite aqui o resumo da conversa..."></textarea>
 
-    <div class="section">
-      <button id="generate">Gerar Resolução</button>
-    </div>
+      <h2>🛠️ Resumo técnico do agente:</h2>
+      <textarea id="resumoTecnico" rows="4" placeholder="Descreva as ações técnicas realizadas..."></textarea>
 
-    <div class="section">
-      <h3>📋 Resolução Gerada:</h3>
-      <pre id="result">(resolução gerada aparecerá aqui)</pre>
-    </div>
+      <button onclick="gerarResolucao()">Gerar Resolução</button>
+      <button id="sendToSheetsBtn">📤 Enviar para Google Sheets</button>
 
-    <div class="section">
-      <h3>📤 Enviar ao Google Sheets</h3>
-      <button id="send">Enviar Resolução</button>
-    </div>
+      <h2>📋 Resolução Gerada:</h2>
+      <textarea id="resolucaoGerada" readonly></textarea>
 
-    <div class="footer">
-      Desenvolvido por Nadson - IGUT Suporte
+      <div class="bottom-panel">
+        <p><strong>Observação:</strong> Após gerar a resolução, clique em "📤 Enviar para Google Sheets" para registrar.</p>
+      </div>
     </div>
   </div>
 
   <script>
-    const endpoint = "SUA_URL_DO_APPS_SCRIPT"; // <- substitua pela URL real
+    function gerarResolucao() {
+      const cliente = document.getElementById("resumoCliente").value;
+      const tecnico = document.getElementById("resumoTecnico").value;
 
-    document.getElementById("generate").addEventListener("click", () => {
-      const cliente = document.getElementById("client-summary").value;
-      const tecnico = document.getElementById("tech-summary").value;
+      const resolucao = `Atendimento Resolvido 🧠\n\n` +
+        `🧠 Intenção do Cliente:\n${cliente}\n\n` +
+        `🛠️ Ação Técnica Realizada:\n${tecnico}\n\n` +
+        `📋 Resultado Final:\nSituação resolvida conforme descrito acima.\n\n` +
+        `📌 Ações Pendentes:\nNenhuma.\n🔁 Follow-up:\nNenhum acompanhamento necessário.`;
 
-      const resolucao = `Atendimento Resolvido\n\n🧠 Intenção do Cliente:\n${cliente}\n\n🛠️ Ação Técnica Realizada:\n${tecnico}\n\n📋 Resultado Final:\nProblema resolvido conforme descrito.\n\n📩 Retorno do Cliente:\nAguardando confirmação ou sem retorno.\n\n📌 Ações Pendentes:\nNenhuma ação pendente.\n\n🔁 Follow-up:\nNenhuma necessidade de acompanhamento adicional.`;
+      document.getElementById("resolucaoGerada").value = resolucao;
+    }
 
-      document.getElementById("result").innerText = resolucao;
-    });
+    document.getElementById('sendToSheetsBtn').addEventListener('click', () => {
+      const resumoConversa = document.getElementById('resumoCliente').value;
+      const resumoTecnico = document.getElementById('resumoTecnico').value;
+      const resolucaoGerada = document.getElementById('resolucaoGerada').value;
 
-    document.getElementById("send").addEventListener("click", async () => {
-      const agente = "Nadson Fernandes";
-      const resumoCliente = document.getElementById("client-summary").value;
-      const resumoTecnico = document.getElementById("tech-summary").value;
-      const resolucaoGerada = document.getElementById("result").innerText;
+      const dados = {
+        resumoConversa,
+        resumoTecnico,
+        resolucaoGerada
+      };
 
-      try {
-        const res = await fetch(endpoint, {
-          method: "POST",
-          body: JSON.stringify({ agente, resumoCliente, resumoTecnico, resolucaoGerada }),
-          headers: { "Content-Type": "application/json" }
-        });
-        const json = await res.json();
-        alert("Resolução enviada com sucesso ao Google Sheets!");
-      } catch (err) {
-        console.error(err);
-        alert("Erro ao enviar resolução.");
-      }
+      fetch('https://script.google.com/macros/s/AKfycbxsBYZtOkvgq132wPyyXhAXI0HhA1yghpYp6fRLa8Kf1RSd6IZk744K5ENP3QRK1AOr/exec', {
+        method: 'POST',
+        body: JSON.stringify(dados),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.status === 'sucesso') {
+          alert('✅ Resolução enviada com sucesso para o Google Sheets!');
+        } else {
+          alert('❌ Erro ao enviar: ' + res.mensagem);
+        }
+      })
+      .catch(err => {
+        alert('❌ Erro na requisição: ' + err.message);
+      });
     });
   </script>
 </body>
