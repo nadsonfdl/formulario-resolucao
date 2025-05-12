@@ -1,142 +1,190 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gerador de Resolução - Igut</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background: linear-gradient(135deg, #f1f1f1, #e2e2e2);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolução de Atendimento</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-top: 40px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #2e3b4e;
+        }
+        .guide {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .guide h3 {
+            color: #555;
+        }
+        .guide ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .guide ul li {
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #5c6bc0;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3f4d8f;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .footer p {
+            color: #777;
+        }
+    </style>
 </head>
-<body class="font-sans">
-
-  <div class="min-h-screen flex justify-center items-center py-12 px-6 bg-gradient-to-b from-blue-200 to-blue-400">
-    <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg p-8 space-y-8">
-      <!-- Título -->
-      <div class="text-center">
-        <h1 class="text-4xl font-extrabold text-blue-700">Gerador de Resolução de Atendimento</h1>
-        <p class="text-sm text-gray-600 mt-2">Preencha os campos abaixo para gerar uma resolução automática no padrão de qualidade.</p>
-      </div>
-
-      <!-- Guia para Resolução -->
-      <div class="bg-blue-50 p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold text-blue-600">📝 Guia de Resolução:</h2>
-        <p class="text-gray-700 mt-2">Para criar uma resolução bem detalhada, siga as etapas abaixo:</p>
-        <ul class="list-inside list-decimal text-gray-600 mt-4 space-y-2">
-          <li><strong>Resumo da Conversa:</strong> Descreva de forma clara o que o cliente relatou. Inclua o problema específico e qualquer contexto relevante.</li>
-          <li><strong>Ação Técnica:</strong> Detalhe as etapas ou configurações feitas para resolver o problema. Inclua acessos ao sistema, mudanças realizadas e ferramentas utilizadas.</li>
-          <li><strong>Resultado Final:</strong> O que foi resolvido após a ação técnica? Como o sistema ou a funcionalidade do cliente foi corrigida?</li>
-          <li><strong>Retorno do Cliente:</strong> O cliente ficou satisfeito com a solução? Faça um breve resumo sobre a resposta dele após a resolução.</li>
-          <li><strong>Ações Pendentes (se houver):</strong> Se o problema não estiver completamente resolvido, descreva o que precisa ser feito a seguir.</li>
-        </ul>
-      </div>
-
-      <!-- Exemplo de Resolução -->
-      <div class="bg-gray-100 p-6 rounded-lg mt-6 shadow-md">
-        <h2 class="text-2xl font-semibold text-blue-600">📋 Exemplo de Resolução:</h2>
-        <p class="text-gray-700 mt-2">Veja abaixo um exemplo de como preencher sua resolução:</p>
-        <div class="bg-white p-4 mt-4 border-2 border-gray-300 rounded-lg text-gray-800">
-          <h3 class="font-semibold">**QUESTÃO DO CLIENTE:**</h3>
-          <p>O cliente deseja um relatório de informes de rendimentos Imposto de Renda ou informações sobre como gerar um relatório de notas geradas no ano anterior para um paciente, para fins de declaração de imposto de renda.</p>
-          <h3 class="font-semibold mt-4">**RESOLUÇÃO:**</h3>
-          <p>Em sistema temos uma função onde gera uma declaração do imposto de renda do paciente. Para emitir esse documento, o cliente deve acessar a aba <strong>PRONTUÁRIO</strong> > Setinha ao lado do botão Paciente no canto superior direito > Clique na opção <strong>Declaração IRPF</strong>.</p>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Guia de Resolução de Atendimento</h1>
         </div>
-      </div>
 
-      <!-- Resumo da Conversa -->
-      <div>
-        <label class="block text-lg font-semibold text-gray-800 mb-2">🧠 Resumo da conversa com o cliente:</label>
-        <textarea id="resumo_conversa" rows="6" class="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Cole aqui o resumo da conversa..."></textarea>
-      </div>
-
-      <!-- Resumo Técnico -->
-      <div>
-        <label class="block text-lg font-semibold text-gray-800 mb-2">🛠️ Resumo técnico do agente:</label>
-        <textarea id="resumo_tecnico" rows="5" class="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Descreva brevemente a ação técnica..."></textarea>
-      </div>
-
-      <!-- Botão Gerar Resolução -->
-      <div class="flex justify-center mt-6">
-        <button id="gerarBtn" class="bg-blue-600 text-white py-3 px-6 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
-          Gerar Resolução
-        </button>
-      </div>
-
-      <!-- Resolução Gerada -->
-      <div class="mt-8">
-        <label class="block text-lg font-semibold text-gray-800 mb-2">📋 Resolução Gerada:</label>
-        <div id="output" class="w-full bg-gray-100 p-6 rounded-lg border-2 border-gray-300 text-sm text-gray-700 min-h-[150px] whitespace-pre-line overflow-auto">
-          <!-- Aqui vai aparecer a resolução formatada -->
+        <!-- Guia com instruções para o agente -->
+        <div class="guide">
+            <h3>Instruções para Preenchimento da Resolução:</h3>
+            <ul>
+                <li><strong>Identifique a questão do cliente:</strong> Descreva o problema principal que o cliente relatou de forma clara e objetiva.</li>
+                <li><strong>Resuma o problema:</strong> Detalhe o fluxo e o erro encontrado pelo cliente. Quais passos foram dados e onde ocorreu o erro.</li>
+                <li><strong>Ação técnica realizada:</strong> Informe as ações que você tomou para resolver o problema. Isso pode incluir alterações no banco de dados ou configurações no sistema.</li>
+                <li><strong>Alterações no banco de dados:</strong> Se houve alteração em tabelas ou dados no banco, descreva qual tabela foi alterada e qual query foi executada.</li>
+                <li><strong>Resultado final:</strong> Descreva como a ação técnica resolveu o problema e como o sistema se comporta após a solução.</li>
+                <li><strong>Retorno do cliente:</strong> Como o cliente reagiu após a solução do problema? Ele confirmou que o problema foi resolvido?</li>
+                <li><strong>Ações pendentes:</strong> Existem ações futuras que precisam ser tomadas?</li>
+                <li><strong>Follow-up:</strong> Caso haja necessidade de acompanhamento, qual é o próximo passo?</li>
+            </ul>
         </div>
-      </div>
+
+        <!-- Formulário para preenchimento do agente -->
+        <div class="form-group">
+            <label for="customerIssue"><strong>1. Questão do Cliente:</strong></label>
+            <textarea id="customerIssue" rows="4"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="resolution"><strong>2. Resolução:</strong></label>
+            <textarea id="resolution" rows="6"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="techAction"><strong>3. Ação Técnica Realizada:</strong></label>
+            <textarea id="techAction" rows="6"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="dbChanges"><strong>4. Alterações no Banco de Dados (se houver):</strong></label>
+            <textarea id="dbChanges" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="finalResult"><strong>5. Resultado Final:</strong></label>
+            <textarea id="finalResult" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="customerFeedback"><strong>6. Retorno do Cliente:</strong></label>
+            <textarea id="customerFeedback" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="pendingActions"><strong>7. Ações Pendentes:</strong></label>
+            <textarea id="pendingActions" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="followUp"><strong>8. Follow-up:</strong></label>
+            <textarea id="followUp" rows="4"></textarea>
+        </div>
+
+        <button id="generateResolutionBtn">Gerar Resolução Completa</button>
+
+        <!-- Área para exibição da resolução gerada -->
+        <div id="generatedResolution" style="margin-top: 30px; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; display: none;">
+            <h3>Resolução Completa:</h3>
+            <p id="resolutionOutput"></p>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Suporte ao Sistema Igut</p>
+        </div>
     </div>
-  </div>
 
-  <!-- Coloque o JavaScript aqui, no final -->
-  <script>
-    document.getElementById("gerarBtn").addEventListener("click", async function() {
-      // Coletando os valores dos campos
-      const resumoConversa = document.getElementById("resumo_conversa").value;
-      const resumoTecnico = document.getElementById("resumo_tecnico").value;
+    <script>
+        document.getElementById('generateResolutionBtn').addEventListener('click', function() {
+            // Coletando os dados dos campos
+            const customerIssue = document.getElementById('customerIssue').value;
+            const resolution = document.getElementById('resolution').value;
+            const techAction = document.getElementById('techAction').value;
+            const dbChanges = document.getElementById('dbChanges').value;
+            const finalResult = document.getElementById('finalResult').value;
+            const customerFeedback = document.getElementById('customerFeedback').value;
+            const pendingActions = document.getElementById('pendingActions').value;
+            const followUp = document.getElementById('followUp').value;
 
-      if (!resumoConversa || !resumoTecnico) {
-        alert("Por favor, preencha todos os campos.");
-        return;
-      }
+            // Criando o conteúdo da resolução
+            const resolutionContent = `
+                <strong>Atendimento Resolvido</strong><br><br>
+                <strong>🧠 Intenção da Cliente:</strong> ${customerIssue}<br><br>
+                <strong>📝 Descrição do Problema:</strong> ${resolution}<br><br>
+                <strong>🛠️ Ação Técnica Realizada:</strong> ${techAction}<br><br>
+                <strong>🛠️ Alterações no Banco de Dados (se houver):</strong> ${dbChanges}<br><br>
+                <strong>📋 Resultado Final:</strong> ${finalResult}<br><br>
+                <strong>📩 Retorno da Cliente:</strong> ${customerFeedback}<br><br>
+                <strong>📌 Ações Pendentes:</strong> ${pendingActions}<br><br>
+                <strong>🔁 Follow-up:</strong> ${followUp}<br>
+            `;
 
-      // Texto do prompt com base no resumo da conversa e técnico
-      const prompt = `
-      A partir do resumo da conversa com o cliente e da ação técnica realizada, gere uma resolução no seguinte formato:
-
-      **Atendimento Resolvido**  
-      🧠 **Intenção do Cliente:**  
-      ${resumoConversa}
-
-      📝 **Descrição do Problema:**  
-      (Usar o resumo da conversa para descrever o problema de forma objetiva.)
-
-      🛠️ **Ação Técnica Realizada:**  
-      ${resumoTecnico}
-
-      📋 **Resultado Final:**  
-      (Descrever o que foi resolvido ou ajustado.)
-
-      📩 **Retorno do Cliente:**  
-      (Descrever a comunicação do cliente após a solução aplicada.)
-
-      📌 **Ações Pendentes:**  
-      (Se houver alguma ação futura.)
-
-      🔁 **Follow-up:**  
-      (Se não houver mais nada a fazer, deixar claro que a situação está resolvida.)
-      `;
-
-      // Chamando a API da OpenAI para gerar a resolução
-      const response = await fetch("https://api.openai.com/v1/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer SUA_CHAVE_API_AQUI`, // Insira sua chave de API aqui
-        },
-        body: JSON.stringify({
-          model: "text-davinci-003", // Ou outro modelo adequado
-          prompt: prompt,
-          max_tokens: 500,
-          temperature: 0.7,
-        }),
-      });
-
-      // Tratando a resposta da API
-      const data = await response.json();
-      const resultadoGerado = data.choices[0].text.trim();
-
-      // Exibindo o resultado na área de resolução
-      document.getElementById("output").textContent = resultadoGerado;
-    });
-  </script>
-
+            // Exibindo a resolução gerada
+            document.getElementById('resolutionOutput').innerHTML = resolutionContent;
+            document.getElementById('generatedResolution').style.display = 'block';
+        });
+    </script>
 </body>
 </html>
