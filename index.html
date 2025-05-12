@@ -15,7 +15,6 @@
 
   <div class="min-h-screen flex justify-center items-center py-12 px-6 bg-gradient-to-b from-blue-200 to-blue-400">
     <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg p-8 space-y-8">
-      
       <!-- Título -->
       <div class="text-center">
         <h1 class="text-4xl font-extrabold text-blue-700">Gerador de Resolução de Atendimento</h1>
@@ -50,6 +49,69 @@
       </div>
     </div>
   </div>
+
+  <!-- Coloque o JavaScript aqui, no final -->
+  <script>
+    document.getElementById("gerarBtn").addEventListener("click", async function() {
+      // Coletando os valores dos campos
+      const resumoConversa = document.getElementById("resumo_conversa").value;
+      const resumoTecnico = document.getElementById("resumo_tecnico").value;
+
+      if (!resumoConversa || !resumoTecnico) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+      }
+
+      // Texto do prompt com base no resumo da conversa e técnico
+      const prompt = `
+      A partir do resumo da conversa com o cliente e da ação técnica realizada, gere uma resolução no seguinte formato:
+
+      **Atendimento Resolvido**  
+      🧠 **Intenção do Cliente:**  
+      ${resumoConversa}
+
+      📝 **Descrição do Problema:**  
+      (Usar o resumo da conversa para descrever o problema de forma objetiva.)
+
+      🛠️ **Ação Técnica Realizada:**  
+      ${resumoTecnico}
+
+      📋 **Resultado Final:**  
+      (Descrever o que foi resolvido ou ajustado.)
+
+      📩 **Retorno do Cliente:**  
+      (Descrever a comunicação do cliente após a solução aplicada.)
+
+      📌 **Ações Pendentes:**  
+      (Se houver alguma ação futura.)
+
+      🔁 **Follow-up:**  
+      (Se não houver mais nada a fazer, deixar claro que a situação está resolvida.)
+      `;
+
+      // Chamando a API da OpenAI para gerar a resolução
+      const response = await fetch("https://api.openai.com/v1/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer SUA_CHAVE_API_AQUI`, // Insira sua chave de API aqui
+        },
+        body: JSON.stringify({
+          model: "text-davinci-003", // Ou outro modelo adequado
+          prompt: prompt,
+          max_tokens: 500,
+          temperature: 0.7,
+        }),
+      });
+
+      // Tratando a resposta da API
+      const data = await response.json();
+      const resultadoGerado = data.choices[0].text.trim();
+
+      // Exibindo o resultado na área de resolução
+      document.getElementById("output").textContent = resultadoGerado;
+    });
+  </script>
 
 </body>
 </html>
