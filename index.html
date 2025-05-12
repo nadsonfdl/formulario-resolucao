@@ -1,205 +1,175 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resolução de Atendimento</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-        .container {
-            display: flex;
-            width: 80%;
-            max-width: 1200px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 40px;
-        }
-        /* Barra lateral */
-        .sidebar {
-            width: 300px;
-            background-color: #f1f1f1;
-            padding: 20px;
-            border-radius: 8px;
-            margin-right: 20px;
-        }
-        .sidebar h3 {
-            color: #555;
-            margin-bottom: 15px;
-        }
-        .guide ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        .guide ul li {
-            margin-bottom: 10px;
-        }
-        .form-container {
-            flex-grow: 1;
-            padding: 20px;
-            max-width: 900px;
-        }
-        h1 {
-            color: #2e3b4e;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #5c6bc0;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #3f4d8f;
-        }
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-        }
-        .footer p {
-            color: #777;
-        }
-        .guide {
-            background-color: #ffffff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .guide h3 {
-            color: #555;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resolução Técnica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 300px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-right: 1px solid #ddd;
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #555;
+    }
+
+    .sidebar .section {
+      margin-bottom: 30px;
+    }
+
+    .sidebar ul {
+      padding-left: 20px;
+    }
+
+    .sidebar li {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .main {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .main h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 24px;
+      color: #2c3e50;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    button {
+      background-color: #4f46e5;
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+    }
+
+    button:hover {
+      background-color: #4338ca;
+    }
+
+    .output {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .output h3 {
+      margin-top: 0;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Barra Lateral com Guia -->
-        <div class="sidebar">
-            <div class="guide">
-                <h3>Guia de Resolução</h3>
-                <ul>
-                    <li><strong>Identifique a questão do cliente:</strong> Descreva o problema principal que o cliente relatou de forma clara e objetiva.</li>
-                    <li><strong>Resuma o problema:</strong> Detalhe o fluxo e o erro encontrado pelo cliente. Quais passos foram dados e onde ocorreu o erro.</li>
-                    <li><strong>Ação técnica realizada:</strong> Informe as ações que você tomou para resolver o problema. Isso pode incluir alterações no banco de dados ou configurações no sistema.</li>
-                    <li><strong>Alterações no banco de dados:</strong> Se houve alteração em tabelas ou dados no banco, descreva qual tabela foi alterada e qual query foi executada.</li>
-                    <li><strong>Resultado final:</strong> Descreva como a ação técnica resolveu o problema e como o sistema se comporta após a solução.</li>
-                    <li><strong>Retorno do cliente:</strong> Como o cliente reagiu após a solução do problema? Ele confirmou que o problema foi resolvido?</li>
-                    <li><strong>Ações pendentes:</strong> Existem ações futuras que precisam ser tomadas?</li>
-                    <li><strong>Follow-up:</strong> Caso haja necessidade de acompanhamento, qual é o próximo passo?</li>
-                </ul>
-            </div>
-        </div>
+  <div class="sidebar">
+    <div class="section">
+      <h2>🧭 Guia de Preenchimento</h2>
+      <ul>
+        <li><strong>🧠 Resumo:</strong> Escreva como o cliente descreveu o problema.</li>
+        <li><strong>🛠️ Técnico:</strong> Explique o que foi feito para corrigir, incluindo ações técnicas.</li>
+        <li><strong>📋 Resultado:</strong> A IA vai gerar um texto com base nas informações.</li>
+      </ul>
+    </div>
+    <div class="section">
+      <h2>📌 Exemplo</h2>
+      <p><strong>🧠</strong> Cliente relatou que o relatório financeiro não estava gerando corretamente, mesmo após lançar todos os repasses.</p>
+      <p><strong>🛠️</strong> Verificamos que o convênio não estava vinculado corretamente à unidade. Corrigimos a configuração, e o relatório passou a ser exibido normalmente.</p>
+    </div>
+  </div>
 
-        <!-- Formulário para Preenchimento -->
-        <div class="form-container">
-            <h1>Guia de Resolução de Atendimento</h1>
+  <div class="main">
+    <h1>Resolução Técnica de Atendimento</h1>
 
-            <div class="form-group">
-                <label for="customerIssue"><strong>1. Questão do Cliente:</strong></label>
-                <textarea id="customerIssue" rows="4"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="resolution"><strong>2. Resolução:</strong></label>
-                <textarea id="resolution" rows="6"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="techAction"><strong>3. Ação Técnica Realizada:</strong></label>
-                <textarea id="techAction" rows="6"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="dbChanges"><strong>4. Alterações no Banco de Dados (se houver):</strong></label>
-                <textarea id="dbChanges" rows="4"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="finalResult"><strong>5. Resultado Final:</strong></label>
-                <textarea id="finalResult" rows="4"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="customerFeedback"><strong>6. Retorno do Cliente:</strong></label>
-                <textarea id="customerFeedback" rows="4"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="pendingActions"><strong>7. Ações Pendentes:</strong></label>
-                <textarea id="pendingActions" rows="4"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="followUp"><strong>8. Follow-up:</strong></label>
-                <textarea id="followUp" rows="4"></textarea>
-            </div>
-
-            <button id="generateResolutionBtn">Gerar Resolução Completa</button>
-
-            <!-- Área para exibição da resolução gerada -->
-            <div id="generatedResolution" style="margin-top: 30px; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; display: none;">
-                <h3>Resolução Completa:</h3>
-                <p id="resolutionOutput"></p>
-            </div>
-
-            <div class="footer">
-                <p>&copy; 2025 Suporte ao Sistema Igut</p>
-            </div>
-        </div>
+    <div class="form-group">
+      <label for="clienteResumo">🧠 Resumo da conversa com o cliente:</label>
+      <textarea id="clienteResumo" placeholder="Descreva com suas palavras o que o cliente relatou..."></textarea>
     </div>
 
-    <script>
-        document.getElementById('generateResolutionBtn').addEventListener('click', function() {
-            // Coletando os dados dos campos
-            const customerIssue = document.getElementById('customerIssue').value;
-            const resolution = document.getElementById('resolution').value;
-            const techAction = document.getElementById('techAction').value;
-            const dbChanges = document.getElementById('dbChanges').value;
-            const finalResult = document.getElementById('finalResult').value;
-            const customerFeedback = document.getElementById('customerFeedback').value;
-            const pendingActions = document.getElementById('pendingActions').value;
-            const followUp = document.getElementById('followUp').value;
+    <div class="form-group">
+      <label for="tecnicoResumo">🛠️ Resumo técnico do agente:</label>
+      <textarea id="tecnicoResumo" placeholder="Detalhe o que você fez tecnicamente para resolver..."></textarea>
+    </div>
 
-            // Criando o conteúdo da resolução
-            const resolutionContent = `
-                <strong>Atendimento Resolvido</strong><br><br>
-                <strong>🧠 Intenção da Cliente:</strong> ${customerIssue}<br><br>
-                <strong>📝 Descrição do Problema:</strong> ${resolution}<br><br>
-                <strong>🛠️ Ação Técnica Realizada:</strong> ${techAction}<br><br>
-                <strong>🛠️ Alterações no Banco de Dados (se houver):</strong> ${dbChanges}<br><br>
-                <strong>📋 Resultado Final:</strong> ${finalResult}<br><br>
-                <strong>📩 Retorno da Cliente:</strong> ${customerFeedback}<br><br>
-                <strong>📌 Ações Pendentes:</strong> ${pendingActions}<br><br>
-                <strong>🔁 Follow-up:</strong> ${followUp}<br>
-            `;
+    <button onclick="gerarResolucao()">Gerar Resolução</button>
 
-            // Exibindo a resolução gerada
-            document.getElementById('resolutionOutput').innerHTML = resolutionContent;
-            document.getElementById('generatedResolution').style.display = 'block';
-        });
-    </script>
+    <div class="output" id="outputBox">
+      <h3>📋 Resolução Gerada:</h3>
+      <p id="resolucaoTexto"></p>
+    </div>
+  </div>
+
+  <script>
+    function gerarResolucao() {
+      const cliente = document.getElementById("clienteResumo").value.trim();
+      const tecnico = document.getElementById("tecnicoResumo").value.trim();
+      const resolucao = document.getElementById("resolucaoTexto");
+      const box = document.getElementById("outputBox");
+
+      if (!cliente || !tecnico) {
+        alert("Preencha os dois campos antes de gerar a resolução.");
+        return;
+      }
+
+      const texto = `
+        Atendimento resolvido com sucesso.<br><br>
+        <strong>🧠 Intenção da cliente:</strong> ${cliente}<br><br>
+        <strong>🛠️ Ação técnica realizada:</strong> ${tecnico}<br><br>
+        O cliente confirmou que o problema foi resolvido e o sistema voltou a funcionar normalmente.
+      `;
+
+      resolucao.innerHTML = texto;
+      box.style.display = 'block';
+    }
+  </script>
 </body>
 </html>
