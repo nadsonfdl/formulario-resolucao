@@ -2,99 +2,59 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Resolução Técnica</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Resoluções</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1f5f9;
+      color: #1e293b;
       margin: 0;
-      font-family: 'Inter', sans-serif;
       display: flex;
-      min-height: 100vh;
-      background: linear-gradient(to right, #eef2f3, #ffffff);
-      color: #333;
+      height: 100vh;
     }
 
     .sidebar {
-      width: 320px;
+      width: 300px;
       background-color: #1e293b;
       color: #f8fafc;
-      padding: 25px;
-      border-right: 1px solid #ccc;
+      padding: 20px;
       overflow-y: auto;
     }
 
     .sidebar h2 {
-      font-size: 18px;
-      margin-bottom: 15px;
-      color: #60a5fa;
-    }
-
-    .sidebar .section {
-      margin-bottom: 30px;
-    }
-
-    .sidebar ul {
-      padding-left: 20px;
-    }
-
-    .sidebar li {
+      font-size: 20px;
       margin-bottom: 10px;
+    }
+
+    .sidebar p {
       font-size: 14px;
-      line-height: 1.6;
+      margin-bottom: 10px;
     }
 
     .main {
       flex: 1;
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      background-color: #f1f5f9;
+      padding: 30px;
+      overflow-y: auto;
     }
 
-    .main h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 26px;
-      color: #1e40af;
-    }
-
-    .form-group {
-      margin-bottom: 25px;
-    }
-
-    .form-group label {
-      font-weight: 600;
-      display: block;
-      margin-bottom: 10px;
-      color: #334155;
-    }
-
-    .form-group textarea {
+    textarea, input, select {
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       font-size: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
       border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      resize: vertical;
-      background: #ffffff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
     button {
+      padding: 12px 24px;
       background-color: #3b82f6;
       color: white;
-      padding: 14px 28px;
-      font-size: 16px;
       border: none;
       border-radius: 8px;
+      font-size: 15px;
       cursor: pointer;
-      align-self: center;
-      transition: background-color 0.2s;
     }
 
     button:hover {
@@ -102,115 +62,93 @@
     }
 
     .output {
-      margin-top: 30px;
-      padding: 25px;
+      margin-top: 20px;
+      padding: 20px;
       background-color: #ffffff;
       border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      display: none;
-    }
-
-    .output h3 {
-      margin-top: 0;
-      font-size: 18px;
-      color: #0f172a;
-    }
-
-    .output p {
-      line-height: 1.6;
-    }
-
-    .sidebar p, .sidebar strong {
-      font-size: 13.5px;
-    }
-
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #ccc;
-      }
-
-      .main {
-        padding: 20px;
-      }
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-
   <div class="sidebar">
-    <div class="section">
-      <h2>🧭 Guia de Preenchimento</h2>
-      <ul>
-        <li><strong>Resumo:</strong> Relate como o cliente explicou o problema.</li>
-        <li><strong>Passos no sistema:</strong> Acesse menus, abas, botões clicados.</li>
-        <li><strong>Permissões/configurações:</strong> Alguma permissão ajustada? Config ativada?</li>
-        <li><strong>Banco de Dados:</strong> Se acessou o banco, inclua:
-          <ul>
-            <li>⚙️ Tabela alterada</li>
-            <li>🗂️ Coluna modificada</li>
-            <li>🧾 Valor aplicado</li>
-            <li>📌 Query executada</li>
-          </ul>
-        </li>
-        <li><strong>Resultado:</strong> O problema foi resolvido? Cliente confirmou?</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>📌 Exemplo</h2>
-      <p><strong>🧠</strong> Cliente relatou erro ao gerar orçamento manual: documento aparecia em branco.</p>
-      <p><strong>🛠️</strong> Foi ativada a configuração <code>LIBERAR_ORCAMENTO_MANUAL = 'S'</code> via banco (tabela <code>unidadesconfig</code>), e ajustadas opções de impressão no sistema.</p>
-    </div>
+    <h2>🧭 Guia de Resolução</h2>
+    <p>🔹 Abas do sistema acessadas (ex: Prontuário > Financeiro > Configurações)</p>
+    <p>🔹 Configurações ativadas/desativadas</p>
+    <p>🔹 Permissões alteradas (qual permissão, onde)</p>
+    <p>🔹 Ações no banco: qual tabela? qual coluna? valor antigo/novo?</p>
+    <p>🔹 Query utilizada (se houver)</p>
+    <p>🔹 Ajustes manuais ou automações</p>
+    <hr>
+    <h2>📌 Exemplo</h2>
+    <p><b>QUESTÃO DO CLIENTE:</b><br>Cliente precisa do relatório de IR referente ao ano anterior.</p>
+    <p><b>RESOLUÇÃO:</b><br>Acessar PRONTUÁRIO > Setinha ao lado do botão Paciente > Declaração IRPF.</p>
   </div>
 
   <div class="main">
-    <h1>Resolução Técnica de Atendimento</h1>
+    <h2>Gerador de Resoluções</h2>
 
-    <div class="form-group">
-      <label for="clienteResumo">🧠 Resumo da conversa com o cliente:</label>
-      <textarea id="clienteResumo" placeholder="Descreva com suas palavras o que o cliente relatou..."></textarea>
-    </div>
+    <label>🧠 Resumo da conversa com o cliente:</label>
+    <textarea id="resumoCliente" rows="4"></textarea>
 
-    <div class="form-group">
-      <label for="tecnicoResumo">🛠️ Resumo técnico do agente:</label>
-      <textarea id="tecnicoResumo" placeholder="Detalhe o que você fez tecnicamente para resolver..."></textarea>
-    </div>
+    <label>🛠️ Resumo técnico do agente:</label>
+    <textarea id="resumoTecnico" rows="4"></textarea>
 
-    <button onclick="gerarResolucao()">📋 Gerar Resolução</button>
+    <button onclick="gerarResolucao()">Gerar Resolução</button>
 
     <div class="output" id="outputBox">
       <h3>📋 Resolução Gerada:</h3>
-      <p id="resolucaoTexto"></p>
+      <div id="resolucao"></div>
+    </div>
+
+    <div class="form-group" style="margin-top: 30px;">
+      <h3>📄 Registro do Atendimento</h3>
+      <label>👤 Nome do Cliente:</label>
+      <input type="text" id="nomeCliente" placeholder="Ex: Talita Andrade Lima">
+
+      <label>🧑‍💻 Nome do Agente:</label>
+      <input type="text" id="nomeAgente" placeholder="Ex: Nadson Fernandes">
+
+      <label>📅 Data do Atendimento:</label>
+      <input type="date" id="dataAtendimento">
+
+      <label>📌 Situação Final:</label>
+      <select id="situacao">
+        <option value="">Selecione...</option>
+        <option value="Resolvido">✅ Resolvido</option>
+        <option value="Parcialmente Resolvido">⚠️ Parcialmente Resolvido</option>
+        <option value="Encaminhado">📤 Encaminhado</option>
+        <option value="Aguardando Cliente">⏳ Aguardando Cliente</option>
+      </select>
+
+      <label>🗒️ Comentário Adicional:</label>
+      <textarea id="comentario" rows="4"></textarea>
     </div>
   </div>
 
   <script>
     function gerarResolucao() {
-      const cliente = document.getElementById("clienteResumo").value.trim();
-      const tecnico = document.getElementById("tecnicoResumo").value.trim();
-      const resolucao = document.getElementById("resolucaoTexto");
-      const box = document.getElementById("outputBox");
+      const cliente = document.getElementById('resumoCliente').value;
+      const tecnico = document.getElementById('resumoTecnico').value;
+      const resolucao = `Atendimento Resolvido
+🧠 Intenção do Cliente:
+${cliente}
 
-      if (!cliente || !tecnico) {
-        alert("Preencha os dois campos antes de gerar a resolução.");
-        return;
-      }
+🛠️ Ação Técnica Realizada:
+${tecnico}
 
-      const texto = `
-        <strong>🧠 Intenção da cliente:</strong><br>${cliente}<br><br>
-        <strong>🛠️ Ação técnica realizada:</strong><br>${tecnico}<br><br>
-        ✅ Problema resolvido com sucesso e cliente informado sobre os ajustes realizados.
-      `;
+📋 Resultado Final:
+Situação ajustada conforme descrição técnica.
+📩 Retorno do Cliente:
+Cliente será informado ou já agradeceu o atendimento.
+📌 Ações Pendentes:
+Nenhuma ação pendente.
+🔁 Follow-up:
+Nenhuma necessidade de acompanhamento adicional.`;
 
-      resolucao.innerHTML = texto;
-      box.style.display = 'block';
+      document.getElementById('resolucao').innerText = resolucao;
     }
   </script>
 </body>
