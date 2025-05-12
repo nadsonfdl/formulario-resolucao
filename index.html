@@ -3,33 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gerador de Resoluções - Igut</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Gerador de Resolução - Igut</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #f1f1f1, #e2e2e2);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <div class="max-w-4xl mx-auto p-6 mt-8 bg-white rounded-xl shadow-lg">
-    <h1 class="text-2xl font-bold mb-4">Gerador de Resolução de Atendimento</h1>
+<body class="font-sans">
 
-    <div class="mb-4">
-      <label class="block text-sm font-medium text-gray-700 mb-1">🧠 Resumo da conversa com o cliente:</label>
-      <textarea id="resumo_conversa" rows="5" class="w-full p-3 border rounded-md bg-gray-50" placeholder="Cole aqui o resumo da conversa..."></textarea>
-    </div>
+  <div class="min-h-screen flex justify-center items-center py-12 px-6 bg-gradient-to-b from-blue-200 to-blue-400">
+    <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg p-8 space-y-8">
+      
+      <!-- Título -->
+      <div class="text-center">
+        <h1 class="text-4xl font-extrabold text-blue-700">Gerador de Resolução de Atendimento</h1>
+        <p class="text-sm text-gray-600 mt-2">Preencha os campos abaixo para gerar uma resolução automática no padrão de qualidade.</p>
+      </div>
 
-    <div class="mb-4">
-      <label class="block text-sm font-medium text-gray-700 mb-1">🛠️ Resumo técnico do agente:</label>
-      <textarea id="resumo_tecnico" rows="4" class="w-full p-3 border rounded-md bg-gray-50" placeholder="Descreva brevemente a ação técnica..."></textarea>
-    </div>
+      <!-- Resumo da Conversa -->
+      <div>
+        <label class="block text-lg font-semibold text-gray-800 mb-2">🧠 Resumo da conversa com o cliente:</label>
+        <textarea id="resumo_conversa" rows="6" class="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Cole aqui o resumo da conversa..."></textarea>
+      </div>
 
-    <button id="gerarBtn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-      Gerar Resolução
-    </button>
+      <!-- Resumo Técnico -->
+      <div>
+        <label class="block text-lg font-semibold text-gray-800 mb-2">🛠️ Resumo técnico do agente:</label>
+        <textarea id="resumo_tecnico" rows="5" class="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Descreva brevemente a ação técnica..."></textarea>
+      </div>
 
-    <div class="mt-6">
-      <label class="block text-sm font-semibold mb-1">📋 Resolução Gerada:</label>
-      <div id="output" class="whitespace-pre-line bg-gray-50 border p-4 rounded-md text-sm text-gray-700 min-h-[150px]">
-        <!-- Aqui vai aparecer a resolução formatada -->
+      <!-- Botão Gerar Resolução -->
+      <div class="flex justify-center mt-6">
+        <button id="gerarBtn" class="bg-blue-600 text-white py-3 px-6 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+          Gerar Resolução
+        </button>
+      </div>
+
+      <!-- Resolução Gerada -->
+      <div class="mt-8">
+        <label class="block text-lg font-semibold text-gray-800 mb-2">📋 Resolução Gerada:</label>
+        <div id="output" class="w-full bg-gray-100 p-6 rounded-lg border-2 border-gray-300 text-sm text-gray-700 min-h-[150px] whitespace-pre-line overflow-auto">
+          <!-- Aqui vai aparecer a resolução formatada -->
+        </div>
       </div>
     </div>
   </div>
+
 </body>
 </html>
