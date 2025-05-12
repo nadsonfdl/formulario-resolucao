@@ -13,24 +13,25 @@
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background: #f0f2f5;
-      color: #333;
       display: flex;
       min-height: 100vh;
+      background: linear-gradient(to right, #eef2f3, #ffffff);
+      color: #333;
     }
 
     .sidebar {
-      width: 300px;
-      background-color: #ffffff;
-      padding: 20px;
-      border-right: 1px solid #ddd;
+      width: 320px;
+      background-color: #1e293b;
+      color: #f8fafc;
+      padding: 25px;
+      border-right: 1px solid #ccc;
       overflow-y: auto;
     }
 
     .sidebar h2 {
       font-size: 18px;
       margin-bottom: 15px;
-      color: #555;
+      color: #60a5fa;
     }
 
     .sidebar .section {
@@ -42,20 +43,24 @@
     }
 
     .sidebar li {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-size: 14px;
+      line-height: 1.6;
     }
 
     .main {
       flex: 1;
       padding: 40px;
+      display: flex;
+      flex-direction: column;
+      background-color: #f1f5f9;
     }
 
     .main h1 {
       text-align: center;
       margin-bottom: 30px;
-      font-size: 24px;
-      color: #2c3e50;
+      font-size: 26px;
+      color: #1e40af;
     }
 
     .form-group {
@@ -65,65 +70,103 @@
     .form-group label {
       font-weight: 600;
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      color: #334155;
     }
 
     .form-group textarea {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       font-size: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
       resize: vertical;
-      min-height: 80px;
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
     button {
-      background-color: #4f46e5;
+      background-color: #3b82f6;
       color: white;
-      padding: 12px 24px;
+      padding: 14px 28px;
       font-size: 16px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      display: block;
-      margin: 0 auto;
+      align-self: center;
+      transition: background-color 0.2s;
     }
 
     button:hover {
-      background-color: #4338ca;
+      background-color: #2563eb;
     }
 
     .output {
       margin-top: 30px;
-      padding: 20px;
+      padding: 25px;
       background-color: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       display: none;
     }
 
     .output h3 {
       margin-top: 0;
       font-size: 18px;
-      color: #2c3e50;
+      color: #0f172a;
+    }
+
+    .output p {
+      line-height: 1.6;
+    }
+
+    .sidebar p, .sidebar strong {
+      font-size: 13.5px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+      }
+
+      .main {
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
+
   <div class="sidebar">
     <div class="section">
       <h2>🧭 Guia de Preenchimento</h2>
       <ul>
-        <li><strong>🧠 Resumo:</strong> Escreva como o cliente descreveu o problema.</li>
-        <li><strong>🛠️ Técnico:</strong> Explique o que foi feito para corrigir, incluindo ações técnicas.</li>
-        <li><strong>📋 Resultado:</strong> A IA vai gerar um texto com base nas informações.</li>
+        <li><strong>Resumo:</strong> Relate como o cliente explicou o problema.</li>
+        <li><strong>Passos no sistema:</strong> Acesse menus, abas, botões clicados.</li>
+        <li><strong>Permissões/configurações:</strong> Alguma permissão ajustada? Config ativada?</li>
+        <li><strong>Banco de Dados:</strong> Se acessou o banco, inclua:
+          <ul>
+            <li>⚙️ Tabela alterada</li>
+            <li>🗂️ Coluna modificada</li>
+            <li>🧾 Valor aplicado</li>
+            <li>📌 Query executada</li>
+          </ul>
+        </li>
+        <li><strong>Resultado:</strong> O problema foi resolvido? Cliente confirmou?</li>
       </ul>
     </div>
+
     <div class="section">
       <h2>📌 Exemplo</h2>
-      <p><strong>🧠</strong> Cliente relatou que o relatório financeiro não estava gerando corretamente, mesmo após lançar todos os repasses.</p>
-      <p><strong>🛠️</strong> Verificamos que o convênio não estava vinculado corretamente à unidade. Corrigimos a configuração, e o relatório passou a ser exibido normalmente.</p>
+      <p><strong>🧠</strong> Cliente relatou erro ao gerar orçamento manual: documento aparecia em branco.</p>
+      <p><strong>🛠️</strong> Foi ativada a configuração <code>LIBERAR_ORCAMENTO_MANUAL = 'S'</code> via banco (tabela <code>unidadesconfig</code>), e ajustadas opções de impressão no sistema.</p>
     </div>
   </div>
 
@@ -140,7 +183,7 @@
       <textarea id="tecnicoResumo" placeholder="Detalhe o que você fez tecnicamente para resolver..."></textarea>
     </div>
 
-    <button onclick="gerarResolucao()">Gerar Resolução</button>
+    <button onclick="gerarResolucao()">📋 Gerar Resolução</button>
 
     <div class="output" id="outputBox">
       <h3>📋 Resolução Gerada:</h3>
@@ -161,10 +204,9 @@
       }
 
       const texto = `
-        Atendimento resolvido com sucesso.<br><br>
-        <strong>🧠 Intenção da cliente:</strong> ${cliente}<br><br>
-        <strong>🛠️ Ação técnica realizada:</strong> ${tecnico}<br><br>
-        O cliente confirmou que o problema foi resolvido e o sistema voltou a funcionar normalmente.
+        <strong>🧠 Intenção da cliente:</strong><br>${cliente}<br><br>
+        <strong>🛠️ Ação técnica realizada:</strong><br>${tecnico}<br><br>
+        ✅ Problema resolvido com sucesso e cliente informado sobre os ajustes realizados.
       `;
 
       resolucao.innerHTML = texto;
