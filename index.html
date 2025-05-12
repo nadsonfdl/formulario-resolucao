@@ -29,6 +29,7 @@
     .content {
       display: flex;
       justify-content: space-between;
+      margin-top: 20px;
     }
     .left-panel {
       width: 48%;
@@ -161,6 +162,7 @@
     <div id="resolucaoGerada">
       <h2>Resolução Gerada:</h2>
       <p id="resolucaoTexto">A resolução será gerada aqui.</p>
+      <button onclick="enviarParaSheets()">Enviar para Google Sheets</button>
     </div>
   </div>
 
@@ -200,12 +202,13 @@
 
       // Exibindo a resolução gerada na tela
       document.getElementById('resolucaoTexto').innerText = resolucao;
-
-      // Chama a função para enviar os dados para o Google Sheets
-      enviarParaSheets(resumoConversa, resumoTecnico, resolucao);
     }
 
-    function enviarParaSheets(resumoConversa, resumoTecnico, resolucao) {
+    function enviarParaSheets() {
+      const resumoConversa = document.getElementById('resumoConversa').value;
+      const resumoTecnico = document.getElementById('resumoTecnico').value;
+      const resolucao = document.getElementById('resolucaoTexto').innerText;
+
       const data = {
         resumoConversa: resumoConversa,
         resumoTecnico: resumoTecnico,
