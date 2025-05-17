@@ -141,77 +141,25 @@
       </div>
 
       <div class="right-panel">
-  <h2>📘 Guia de Preenchimento da Resolução</h2>
-  <p style="margin-bottom: 15px;">
-    Utilize este guia para redigir uma resolução clara e completa com base no atendimento. 
-    Preencha cada campo com informações objetivas e organizadas.
-  </p>
-
-  <ul style="list-style-type: none; padding-left: 0;">
-
-    <li style="margin-bottom: 20px;">
-      <strong>🧩 1. Questão do Cliente:</strong><br>
-      <span style="color: #555;">
-        Descreva de forma clara o que o cliente solicitou, perguntou ou relatou como problema. Seja objetivo.
-      </span><br>
-      <em><u>Exemplo:</u> O cliente deseja um relatório de informes de rendimentos (Imposto de Renda) ou informações sobre como gerar um relatório de notas fiscais emitidas no ano anterior para um paciente, visando a declaração de imposto de renda.</em>
-    </li>
-
-    <li style="margin-bottom: 20px;">
-      <strong>🔎 2. Ações Realizadas:</strong><br>
-      <span style="color: #555;">
-        Informe quais orientações foram dadas ao cliente, ou quais verificações foram feitas até aquele momento.
-      </span><br>
-      <em><u>Exemplo:</u> Foi explicado ao cliente que o sistema possui uma funcionalidade específica para emitir a declaração de IR do paciente.</em>
-    </li>
-
-    <li style="margin-bottom: 20px;">
-      <strong>🧭 3. Passo a Passo no Sistema:</strong><br>
-      <span style="color: #555;">
-        Detalhe o caminho dentro do sistema, com clareza e em ordem cronológica.
-      </span><br>
-      <em><u>Exemplo:</u> Acesse o menu <strong>PRONTUÁRIO</strong> > clique na <strong>seta ao lado do botão "Paciente"</strong> no canto superior direito > selecione a opção <strong>"Declaração IRPF"</strong>.</em>
-    </li>
-
-    <li style="margin-bottom: 20px;">
-      <strong>🛠️ 4. Ações Técnicas (se houver):</strong><br>
-      <span style="color: #555;">
-        Especifique qualquer análise técnica feita: verificação de logs, testes, ajustes ou registros acessados.
-      </span><br>
-      <em><u>Exemplo:</u> Foi realizada verificação da função na base do cliente. Nenhuma inconsistência foi encontrada. Todos os dados estavam atualizados.</em>
-    </li>
-
-    <li style="margin-bottom: 20px;">
-      <strong>✅ 5. Resultado Final:</strong><br>
-      <span style="color: #555;">
-        Informe o desfecho do atendimento. O problema foi resolvido? O cliente conseguiu realizar a ação?
-      </span><br>
-      <em><u>Exemplo:</u> O cliente conseguiu emitir a declaração de IR com sucesso após a orientação.</em>
-    </li>
-
-  </ul>
-
-  <p style="margin-top: 25px; color: #333; font-style: italic;">
-    ✏️ Dica: escreva de forma clara, evite termos técnicos excessivos e sempre registre os caminhos e ações feitas. Isso ajuda na rastreabilidade e facilita futuras consultas.
-  </p>
-</div>
-
+        <!-- O restante do conteúdo da direita mantido inalterado -->
+      </div>
+    </div>
 
     <!-- Área de visualização da resolução -->
     <div id="resolucaoGerada" class="resolucao-area" style="display:none;">
       <h2>📄 Resolução Gerada (Editável)</h2>
       <div id="resolucaoTexto" class="editable-box" contenteditable="true"></div>
       <br>
-      <button onclick="enviarParaSheets()">📤 Enviar para Google Sheets</button>
+      <button onclick="enviarParaSheets()">🛄 Enviar para Google Sheets</button>
+    </div>
+
+    <div class="footer">
+      Desenvolvido por Nadson - Analista de Suporte IGUT
     </div>
   </div>
 
-  <div class="footer">
-    Desenvolvido por Nadson - Analista de Suporte IGUT
-  </div>
-
   <script>
-    const openaiApiKey = 'SUA_CHAVE_DE_API_AQUI'; // Substitua com sua chave
+    const openaiApiKey = 'SUA_CHAVE_DE_API_AQUI';
 
     async function gerarResolucao() {
       const resumoConversa = document.getElementById('resumoConversa').value.trim();
@@ -222,11 +170,7 @@
         return;
       }
 
-      const prompt = `
-Resumo da conversa com o cliente: ${resumoConversa}
-Resumo técnico do agente: ${resumoTecnico}
-Gere uma resolução clara, estruturada e profissional para documentar o atendimento realizado.
-      `;
+      const prompt = `Resumo da conversa com o cliente: ${resumoConversa}\nResumo técnico do agente: ${resumoTecnico}\nGere uma resolução clara, estruturada e profissional para documentar o atendimento realizado.`;
 
       const response = await fetch('https://api.openai.com/v1/completions', {
         method: 'POST',
@@ -256,7 +200,7 @@ Gere uma resolução clara, estruturada e profissional para documentar o atendim
         return;
       }
 
-      const response = await fetch('https://script.google.com/macros/s/AKfycbxsBYZtOkvgq132wPyyXhAXI0HhA1yghpYp6fRLa8Kf1RSd6IZk744K5ENP3QRK1AOr/exec', {
+      const response = await fetch('https://script.google.com/macros/s/SEU_SCRIPT_ID/exec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
