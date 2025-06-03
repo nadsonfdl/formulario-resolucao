@@ -1,208 +1,343 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Resumos e Resoluções com IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Roboto', sans-serif;
-        }
-
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #f4f6f9;
+            font-family: 'Inter', sans-serif;
         }
-
-        header {
-            background-color: #2563eb;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        .hero-gradient {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        .input-field {
+            transition: all 0.2s ease;
         }
-
-        .guide {
-            background-color: #e0f2fe;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 6px solid #2563eb;
-            margin-bottom: 25px;
+        .input-field:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
         }
-
-        .guide h3 {
-            margin-top: 0;
-            color: #2563eb;
+        .result-card {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
         }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #333;
+        .result-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            resize: vertical;
-            min-height: 120px;
-            margin-bottom: 20px;
-            font-size: 15px;
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
         }
-
-        .buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .buttons button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .generate {
-            background-color: #2563eb;
-            color: white;
-        }
-
-        .generate:hover {
-            background-color: #1e4ecc;
-        }
-
-        .clear {
-            background-color: #6b7280;
-            color: white;
-        }
-
-        .clear:hover {
-            background-color: #4b5563;
-        }
-
-        .view {
-            background-color: #10b981;
-            color: white;
-        }
-
-        .view:hover {
-            background-color: #059669;
-        }
-
-        .result {
-            background-color: #f9fafb;
-            border: 1px solid #d1d5db;
-            padding: 15px;
-            border-radius: 8px;
-            min-height: 100px;
-            white-space: pre-wrap;
-        }
-
-        footer {
-            text-align: center;
-            padding: 10px;
-            color: #666;
-            margin-top: 20px;
+        .guide-card {
+            background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
         }
     </style>
 </head>
-<body>
-
-    <header>Gerador de Resumos e Resoluções com IA</header>
-
-    <div class="container">
-
-        <div class="guide">
-            <h3>📄 Guia de Preenchimento</h3>
-            <p><strong>📝 Questão do Cliente:</strong><br>
-                - Descreva claramente o que o cliente solicitou, reportou ou está com dúvida.<br>
-                - Foque em ser objetivo e claro, sem excesso de informações irrelevantes.</p>
-            <p><strong>🔧 Resolução do Agente:</strong><br>
-                - Informe como foi resolvido.<br>
-                - Detalhe os passos passados, procedimentos realizados ou orientações.<br>
-                - Ex.: "Para gerar a declaração IRPF, acesse PRONTUÁRIO &gt; seta ao lado do botão Paciente &gt; Declaração IRPF."</p>
+<body class="bg-gray-50">
+    <!-- Fixed Header -->
+    <header class="hero-gradient fixed top-0 left-0 right-0 shadow-sm z-10">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-blue-900">Gerador de Resumos e Resoluções com IA</h1>
+                    <p class="text-sm text-blue-800">Ferramenta para agentes de atendimento</p>
+                </div>
+                <div class="hidden md:block">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        Versão 1.0
+                    </span>
+                </div>
+            </div>
         </div>
+    </header>
 
-        <label for="clientIssue">Questão do Cliente:</label>
-        <textarea id="clientIssue" placeholder="Descreva aqui a solicitação ou problema do cliente..."></textarea>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pt-24 pb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Content Area -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Guide Card -->
+                <div class="p-4 rounded-xl guide-card border border-gray-200 shadow-sm">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
+                        </svg>
+                        <h2 class="text-lg font-semibold text-gray-800">Guia de Preenchimento para Agentes</h2>
+                    </div>
+                    <div class="space-y-4 text-sm text-gray-700">
+                        <div>
+                            <div class="flex items-start space-x-2">
+                                <span class="text-blue-500">📝</span>
+                                <div>
+                                    <p class="font-medium">Questão do Cliente:</p>
+                                    <p class="mt-1">Informe claramente qual foi a solicitação ou dúvida apresentada pelo cliente. Seja objetivo, descrevendo o problema ou demanda relatada.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-start space-x-2">
+                                <span class="text-blue-500">🔧</span>
+                                <div>
+                                    <p class="font-medium">Resolução do Agente:</p>
+                                    <p class="mt-1">Detalhe qual foi a solução aplicada, os passos informados ao cliente ou procedimentos realizados. Se for um problema recorrente, padronize a resposta de forma clara e profissional.</p>
+                                    <p class="mt-2 text-xs italic">Exemplo: "Para emitir a declaração IRPF, acesse a aba PRONTUÁRIO > Clique na seta ao lado do botão Paciente > Escolha a opção Declaração IRPF."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <label for="resolution">Resolução do Agente:</label>
-        <textarea id="resolution" placeholder="Descreva aqui qual foi a resolução aplicada ou informada..."></textarea>
+                <!-- Input Fields -->
+                <div class="space-y-6">
+                    <!-- Customer Issue -->
+                    <div>
+                        <label for="customer-issue" class="block text-sm font-medium text-gray-700 mb-1">Questão do Cliente</label>
+                        <textarea id="customer-issue" rows="6" class="input-field w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Descreva aqui o que o cliente está solicitando, conforme identificado na conversa ou no atendimento."></textarea>
+                    </div>
 
-        <div class="buttons">
-            <button class="generate" onclick="generateSummary()">Gerar Resumo Detalhado com IA</button>
-            <button class="clear" onclick="clearFields()">Limpar Campos</button>
-            <button class="view" onclick="viewResult()">Visualizar Resultado</button>
+                    <!-- Agent Resolution -->
+                    <div>
+                        <label for="agent-resolution" class="block text-sm font-medium text-gray-700 mb-1">Resolução do Agente</label>
+                        <textarea id="agent-resolution" rows="6" class="input-field w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Descreva aqui, de forma resumida, qual foi a resolução aplicada ou informada ao cliente."></textarea>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex flex-wrap gap-3 pt-2">
+                    <button id="generate-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <svg class="w-4 h-4 inline mr-2 -mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path>
+                        </svg>
+                        Gerar Resumo Detalhado com IA
+                    </button>
+                    <button id="clear-btn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
+                        <svg class="w-4 h-4 inline mr-2 -mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        Limpar Campos
+                    </button>
+                    <button id="view-result-btn" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <svg class="w-4 h-4 inline mr-2 -mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        Visualizar Resultado
+                    </button>
+                </div>
+
+                <!-- Result Section (hidden by default) -->
+                <div id="result-section" class="pt-6 hidden">
+                    <div class="border-b border-gray-200 pb-2 mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Resumo Gerado pela IA</h3>
+                    </div>
+                    <div id="result-content" class="result-card p-4 bg-white border border-gray-200 rounded-lg">
+                        <div id="ai-generated-text" class="text-gray-700">
+                            <!-- Result will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    <div class="mt-3 flex justify-end">
+                        <button id="copy-btn" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-medium rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
+                            <svg class="w-4 h-4 inline mr-1 -mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path>
+                                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path>
+                            </svg>
+                            Copiar Texto
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Help Section -->
+            <div class="hidden lg:block">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm sticky top-8">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-800">Dicas para Melhores Respostas</h3>
+                    </div>
+                    <div class="space-y-4 text-sm text-gray-600">
+                        <div>
+                            <p class="font-medium text-gray-700">Seja específico</p>
+                            <p class="mt-1">Inclua todos os detalhes relevantes sobre o problema do cliente para ajudar a IA a gerar um resumo mais preciso.</p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-700">Use linguagem simples</p>
+                            <p class="mt-1">Evite jargões técnicos quando possível para garantir que o resumo seja compreensível para todos.</p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-700">Mencione sistemas</p>
+                            <p class="mt-1">Se aplicável, identifique os sistemas ou ferramentas utilizados na resolução (ex.: SAP, CRM, Portal do Cliente).</p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-700">Formato padrão</p>
+                            <p class="mt-1">Tente seguir a estrutura: [Problema] + [Ação] + [Resultado] para garantir consistência nos resumos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </main>
 
-        <div class="result" id="resultArea">
-            <em>O resultado gerado pela IA aparecerá aqui...</em>
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0 bg-black opacity-70"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+                <div class="p-4 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white">
+                    <h3 class="text-lg font-medium text-gray-900">Resultado Gerado pela IA</h3>
+                    <button id="close-modal-btn" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div id="modal-content" class="text-gray-700 whitespace-pre-line"></div>
+                </div>
+                <div class="p-4 border-t border-gray-200 flex justify-end sticky bottom-0 bg-white">
+                    <button id="copy-modal-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Copiar Texto
+                    </button>
+                </div>
+            </div>
         </div>
-
     </div>
 
-    <footer>&copy; 2025 - Ferramenta desenvolvida por Nadson Fernandes</footer>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-6">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>© 2023 Gerador de Resumos com IA. Todos os direitos reservados.</p>
+            <p class="mt-1 text-gray-400">Uma ferramenta para melhorar a documentação de atendimentos.</p>
+        </div>
+    </footer>
 
     <script>
-        function clearFields() {
-            document.getElementById('clientIssue').value = '';
-            document.getElementById('resolution').value = '';
-            document.getElementById('resultArea').innerHTML = '<em>O resultado gerado pela IA aparecerá aqui...</em>';
-        }
+        // DOM Elements
+        const customerIssueInput = document.getElementById('customer-issue');
+        const agentResolutionInput = document.getElementById('agent-resolution');
+        const generateBtn = document.getElementById('generate-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const viewResultBtn = document.getElementById('view-result-btn');
+        const resultSection = document.getElementById('result-section');
+        const aiGeneratedText = document.getElementById('ai-generated-text');
+        const copyBtn = document.getElementById('copy-btn');
+        const modal = document.getElementById('modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modalContent = document.getElementById('modal-content');
+        const copyModalBtn = document.getElementById('copy-modal-btn');
 
+        // Event Listeners
+        generateBtn.addEventListener('click', generateSummary);
+        clearBtn.addEventListener('click', clearFields);
+        viewResultBtn.addEventListener('click', showModal);
+        copyBtn.addEventListener('click', copyResult);
+        closeModalBtn.addEventListener('click', closeModal);
+        copyModalBtn.addEventListener('click', copyModalContent);
+
+        // Update view result button state based on inputs
+        [customerIssueInput, agentResolutionInput].forEach(input => {
+            input.addEventListener('input', () => {
+                viewResultBtn.disabled = !(customerIssueInput.value.trim() && agentResolutionInput.value.trim());
+            });
+        });
+
+        // Functions
         function generateSummary() {
-            const issue = document.getElementById('clientIssue').value.trim();
-            const resolution = document.getElementById('resolution').value.trim();
-
-            if(!issue || !resolution) {
-                alert("Por favor, preencha os dois campos.");
+            const customerIssue = customerIssueInput.value.trim();
+            const agentResolution = agentResolutionInput.value.trim();
+            
+            if (!customerIssue || !agentResolution) {
+                alert('Por favor, preencha ambos os campos antes de gerar o resumo.');
                 return;
             }
 
-            // Simulação do texto gerado pela IA
-            const summary = `
-🔍 Customer Intent
-O cliente deseja: ${issue}
-
-📝 Conversation Summary
-O cliente reportou: ${issue}. 
-O agente informou a seguinte resolução: ${resolution}
-
-✅ Action Items
-- Garantir que a informação passada está correta.
-- Caso necessário, validar com suporte técnico.
-
-🚀 Resolução
-${resolution}
+            // Simulate AI processing
+            generateBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processando...
             `;
+            generateBtn.disabled = true;
 
-            document.getElementById('resultArea').innerText = summary;
+            // Simulate API call with timeout
+            setTimeout(() => {
+                const summary = createAISummary(customerIssue, agentResolution);
+                aiGeneratedText.innerHTML = summary;
+                modalContent.textContent = summary;
+                resultSection.classList.remove('hidden');
+                
+                generateBtn.innerHTML = `
+                    <svg class="w-4 h-4 inline mr-2 -mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path>
+                    </svg>
+                    Gerar Resumo Detalhado com IA
+                `;
+                generateBtn.disabled = false;
+            }, 2000);
         }
 
-        function viewResult() {
-            const result = document.getElementById('resultArea').innerText;
-            alert(result ? result : 'Nenhum resultado gerado ainda.');
+        function createAISummary(issue, resolution) {
+            // This would be replaced with actual AI API call in a real implementation
+            const now = new Date();
+            const formattedDate = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            return `Resumo do Atendimento - ${formattedDate}\n\n` +
+                   `🚀 <strong>Questão Relatada pelo Cliente:</strong>\n${issue}\n\n` +
+                   `✅ <strong>Solução Aplicada:</strong>\n${resolution}\n\n` +
+                   `🗒️ <strong>Resumo Técnico:</strong>\nO cliente relatou uma questão relacionada a ${issue.split(' ').length > 5 ? issue.split(' ').slice(0, 5).join(' ') + '...' : issue}. ` +
+                   `Foi orientado conforme procedimento padrão, onde ${resolution.split(' ').length > 10 ? resolution.split(' ').slice(0, 10).join(' ') + '...' : resolution}. ` +
+                   `Sugere-se acompanhamento do caso por 48h para verificar se a solução foi efetiva.\n\n` +
+                   `📌 <strong>Próximos Passos:</strong>\n- Registrar este atendimento no sistema\n- Enviar e-mail de confirmação ao cliente\n- Agendar follow-up para amanhã`;
+        }
+
+        function clearFields() {
+            customerIssueInput.value = '';
+            agentResolutionInput.value = '';
+            aiGeneratedText.innerHTML = '';
+            resultSection.classList.add('hidden');
+            viewResultBtn.disabled = true;
+        }
+
+        function showModal() {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function copyResult() {
+            const textToCopy = aiGeneratedText.textContent;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Show temporary feedback
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '✓ Copiado!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        function copyModalContent() {
+            const textToCopy = modalContent.textContent;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Show temporary feedback
+                const originalText = copyModalBtn.innerHTML;
+                copyModalBtn.innerHTML = '✓ Copiado!';
+                setTimeout(() => {
+                    copyModalBtn.innerHTML = originalText;
+                }, 2000);
+            });
         }
     </script>
-
 </body>
 </html>
