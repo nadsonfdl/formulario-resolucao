@@ -1,168 +1,316 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Gerador de Relatórios de Atendimento</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Resumos e Resoluções com IA</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
-        .hero-gradient {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        /* Custom styles for textareas */
+        textarea {
+            transition: all 0.3s ease;
         }
-        .input-field {
-            transition: all 0.2s ease;
-        }
-        .input-field:focus {
+        textarea:focus {
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
         }
-        .result-card {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+        /* Modal animation */
+        .modal {
+            animation: fadeIn 0.3s ease-out;
         }
-        .result-card:hover {
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .modal-overlay {
-            background-color: rgba(0, 0, 0, 0.5);
+        /* Toast notification */
+        .toast {
+            animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-in 2.7s forwards;
         }
-        .guide-card {
-            background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+        @keyframes slideIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; }
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 min-h-screen">
     <!-- Fixed Header -->
-    <header class="hero-gradient fixed top-0 left-0 right-0 shadow-sm z-10">
+    <header class="sticky top-0 z-10 bg-blue-600 text-white shadow-md">
         <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-2xl font-bold text-blue-900">Gerador de Relatórios de Atendimento</h1>
-                    <p class="text-sm text-blue-800">Ferramenta para agentes de suporte</p>
-                </div>
-                <div class="hidden md:block">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                        Versão 1.0
-                    </span>
-                </div>
-            </div>
+            <h1 class="text-2xl md:text-3xl font-bold">Gerador de Resumos e Resoluções com IA</h1>
+            <p class="text-blue-100 text-sm mt-1">Solução inteligente para atendimento ao cliente</p>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 pt-24 pb-12">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Column: Content Area -->
-            <div class="lg:col-span-2 space-y-6">
-                <!-- Guide Card -->
-                <div class="p-4 rounded-xl guide-card border border-gray-200 shadow-sm">
-                    <div class="flex items-center space-x-2 mb-3">
-                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Guide Box -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8 shadow-sm">
+            <h2 class="text-xl font-semibold text-blue-800 mb-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Guia de Preenchimento para Agentes
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
+                <div class="bg-white p-4 rounded-lg shadow-xs">
+                    <h3 class="font-medium text-blue-700 mb-2 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <h2 class="text-lg font-semibold text-gray-800">Guia para Preenchimento de Relatório</h2>
-                    </div>
-                    <div class="space-y-4 text-sm text-gray-700">
-                        <div>
-                            <div class="flex items-start space-x-2">
-                                <span class="text-blue-500">🕵️‍♂️</span>
-                                <div>
-                                    <p class="font-medium">Descrição do Atendimento:</p>
-                                    <p class="mt-1">Informe de forma clara o motivo do atendimento ou a solicitação do cliente.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-start space-x-2">
-                                <span class="text-blue-500">⚙️</span>
-                                <div>
-                                    <p class="font-medium">Ações Realizadas:</p>
-                                    <p class="mt-1">Detalhe as ações tomadas durante o atendimento, incluindo procedimentos e orientações dadas ao cliente.</p>
-                                    <p class="mt-2 text-xs italic">Exemplo: "Atualização do cadastro do cliente realizada via sistema CRM, orientado sobre próxima etapa."</p>
-                                </div>
-                            </div>
-                        </div>
+                        Questão do Cliente
+                    </h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Informe claramente qual foi a solicitação ou dúvida apresentada pelo cliente.</li>
+                        <li>Seja objetivo, descrevendo o problema ou demanda relatada.</li>
+                        <li>Mantenha o foco na perspectiva do cliente.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-xs">
+                    <h3 class="font-medium text-blue-700 mb-2 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Resolução do Agente
+                    </h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Detalhe qual foi a solução aplicada ou os passos informados ao cliente.</li>
+                        <li>Para problemas recorrentes, padronize a resposta de forma clara.</li>
+                        <li>Exemplo: <span class="italic">"Para emitir a declaração IRPF, acesse a aba PRONTUÁRIO > Clique na seta ao lado do botão Paciente > Escolha a opção Declaração IRPF."</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Fields -->
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <!-- Client Question -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <label for="client-question" class="block text-lg font-medium text-gray-800 mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Questão do Cliente
+                </label>
+                <textarea id="client-question" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Descreva aqui o que o cliente está solicitando, conforme identificado na conversa ou no atendimento."></textarea>
+            </div>
+            
+            <!-- Agent Resolution -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <label for="agent-resolution" class="block text-lg font-medium text-gray-800 mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Resolução do Agente
+                </label>
+                <textarea id="agent-resolution" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Descreva aqui, de forma resumida, qual foi a resolução aplicada ou informada ao cliente."></textarea>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap gap-4 justify-center md:justify-start mb-12">
+            <button id="generate-btn" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Gerar Resumo Detalhado com IA
+            </button>
+            <button id="clear-btn" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg shadow-sm transition-colors duration-300 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Limpar Campos
+            </button>
+            <button id="view-btn" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg shadow-md transition-colors duration-300 opacity-70 cursor-not-allowed flex items-center" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Visualizar Resultado
+            </button>
+        </div>
+
+        <!-- Modal (hidden by default) -->
+        <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+            <div class="modal bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        Resumo Gerado pela IA
+                    </h2>
+                </div>
+                <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 160px)">
+                    <div id="ai-result" class="prose max-w-none">
+                        <!-- AI generated content will appear here -->
+                        <p class="text-gray-500 italic">O resultado aparecerá aqui após a geração.</p>
                     </div>
                 </div>
-
-                <!-- Input Fields -->
-                <div class="space-y-6">
-                    <!-- Atendimento -->
-                    <div>
-                        <label for="service-description" class="block text-sm font-medium text-gray-700 mb-1">Descrição do Atendimento</label>
-                        <textarea id="service-description" rows="6" class="input-field w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Descreva aqui o atendimento realizado, demandas ou dúvidas do cliente."></textarea>
-                    </div>
-
-                    <!-- Ações -->
-                    <div>
-                        <label for="actions-taken" class="block text-sm font-medium text-gray-700 mb-1">Ações Realizadas</label>
-                        <textarea id="actions-taken" rows="6" class="input-field w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Descreva as ações tomadas para resolver ou orientar o cliente."></textarea>
-                    </div>
-                </div>
-
-                <!-- Controls -->
-                <div class="flex flex-wrap gap-3 pt-2">
-                    <button id="generate-report-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        <svg class="w-4 h-4 inline mr-2 -mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path>
+                <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+                    <button id="edit-btn" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                        Gerar Relatório
+                        Editar
                     </button>
-                    <button id="clear-report-btn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
-                        <svg class="w-4 h-4 inline mr-2 -mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path>
+                    <button id="submit-btn" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg shadow transition-colors flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                         </svg>
-                        Limpar
+                        Enviar para Google Sheets
                     </button>
                 </div>
             </div>
+        </div>
 
-            <!-- Right Column: Results -->
-            <div>
-                <div class="result-card p-4 bg-white rounded-xl border border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Relatório Gerado</h3>
-                    <div id="report-output" class="whitespace-pre-wrap text-gray-700 min-h-[300px] border border-gray-100 rounded p-3 bg-gray-50 overflow-auto"></div>
-                </div>
+        <!-- Success Toast (hidden by default) -->
+        <div id="success-toast" class="toast fixed bottom-6 right-6 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hidden">
+            <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Resumo enviado com sucesso para o Google Sheets!
             </div>
         </div>
     </main>
 
     <script>
-        const generateBtn = document.getElementById('generate-report-btn');
-        const clearBtn = document.getElementById('clear-report-btn');
-        const descriptionField = document.getElementById('service-description');
-        const actionsField = document.getElementById('actions-taken');
-        const reportOutput = document.getElementById('report-output');
-
-        generateBtn.addEventListener('click', () => {
-            const desc = descriptionField.value.trim();
-            const actions = actionsField.value.trim();
-
-            if (!desc && !actions) {
-                alert('Por favor, preencha ao menos um dos campos para gerar o relatório.');
-                return;
-            }
-
-            let report = '--- Relatório de Atendimento ---\n\n';
-
-            if (desc) report += `Descrição do Atendimento:\n${desc}\n\n`;
-            if (actions) report += `Ações Realizadas:\n${actions}\n\n`;
-
-            report += '-------------------------------';
-
-            reportOutput.textContent = report;
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const clientQuestion = document.getElementById('client-question');
+            const agentResolution = document.getElementById('agent-resolution');
+            const generateBtn = document.getElementById('generate-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const viewBtn = document.getElementById('view-btn');
+            const resultModal = document.getElementById('result-modal');
+            const aiResult = document.getElementById('ai-result');
+            const editBtn = document.getElementById('edit-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const successToast = document.getElementById('success-toast');
+            
+            // Enable/disable View button based on input
+            [clientQuestion, agentResolution].forEach(field => {
+                field.addEventListener('input', () => {
+                    viewBtn.disabled = !(clientQuestion.value.trim() && agentResolution.value.trim());
+                    viewBtn.classList.toggle('opacity-70', viewBtn.disabled);
+                    viewBtn.classList.toggle('cursor-not-allowed', viewBtn.disabled);
+                    if (!viewBtn.disabled) {
+                        viewBtn.classList.remove('opacity-70');
+                        viewBtn.classList.remove('cursor-not-allowed');
+                    }
+                });
+            });
+            
+            // Generate AI Summary (mock function)
+            generateBtn.addEventListener('click', function() {
+                if (!clientQuestion.value.trim() || !agentResolution.value.trim()) {
+                    alert('Por favor, preencha ambos os campos antes de gerar o resumo.');
+                    return;
+                }
+                
+                // Simulate AI processing
+                generateBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Processando...';
+                
+                setTimeout(() => {
+                    generateBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>Gerar Resumo Detalhado com IA';
+                    
+                    // Mock AI response
+                    const summary = `
+                        <h3 class="text-blue-700 font-medium">Resumo do Atendimento</h3>
+                        <p><strong>Solicitação do cliente:</strong> ${clientQuestion.value}</p>
+                        <p class="mt-2"><strong>Solução aplicada:</strong> ${agentResolution.value}</p>
+                        
+                        <h3 class="text-blue-700 font-medium mt-4">Detalhes Técnicos</h3>
+                        <p>O procedimento padrão para este tipo de solicitação envolve os seguintes passos:</p>
+                        <ol class="list-decimal pl-5 mt-2 space-y-1">
+                            <li>Verificar as credenciais do cliente no sistema</li>
+                            <li>Acessar a seção correspondente à solicitação</li>
+                            <li>Executar os procedimentos necessários</li>
+                            <li>Confirmar a resolução com o cliente</li>
+                        </ol>
+                        
+                        <div class="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                            <p class="text-sm"><strong>Modelo de resposta recomendada:</strong> "Conforme alinhado, [descrever solução aplicada]. Caso necessite de algo adicional, estamos à disposição para auxiliar."</p>
+                        </div>
+                    `;
+                    
+                    aiResult.innerHTML = summary;
+                    viewBtn.disabled = false;
+                    viewBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                }, 2000);
+            });
+            
+            // Clear all fields
+            clearBtn.addEventListener('click', function() {
+                clientQuestion.value = '';
+                agentResolution.value = '';
+                aiResult.innerHTML = '<p class="text-gray-500 italic">O resultado aparecerá aqui após a geração.</p>';
+                viewBtn.disabled = true;
+                viewBtn.classList.add('opacity-70', 'cursor-not-allowed');
+            });
+            
+            // View result (opens modal)
+            viewBtn.addEventListener('click', function() {
+                resultModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Close modal when clicking outside
+            resultModal.addEventListener('click', function(e) {
+                if (e.target === resultModal) {
+                    resultModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Submit to Google Sheets (mock function)
+            submitBtn.addEventListener('click', function() {
+                // Simulate API call
+                submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Enviando...';
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>Enviar para Google Sheets';
+                    
+                    resultModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    
+                    // Show success toast
+                    successToast.classList.remove('hidden');
+                    setTimeout(() => {
+                        successToast.classList.add('hidden');
+                    }, 3000);
+                }, 1500);
+            });
+            
+            // Toggle edit mode
+            let isEditing = false;
+            editBtn.addEventListener('click', function() {
+                if (!isEditing) {
+                    // Enable editing
+                    aiResult.setAttribute('contenteditable', 'true');
+                    aiResult.classList.add('border', 'border-blue-300', 'p-3', 'rounded');
+                    editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Salvar Edições';
+                } else {
+                    // Disable editing
+                    aiResult.removeAttribute('contenteditable');
+                    aiResult.classList.remove('border', 'border-blue-300', 'p-3', 'rounded');
+                    editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>Editar';
+                }
+                isEditing = !isEditing;
+            });
         });
-
-        clearBtn.addEventListener('click', () => {
-            descriptionField.value = '';
-            actionsField.value = '';
-            reportOutput.textContent = '';
+        
+        // Keyboard shortcut to close modal with Esc key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !document.getElementById('result-modal').classList.contains('hidden')) {
+                document.getElementById('result-modal').classList.add('hidden');
+                document.body.style.overflow = '';
+            }
         });
     </script>
 </body>
