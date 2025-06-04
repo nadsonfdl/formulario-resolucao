@@ -1,43 +1,38 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerador de Resumos e Resoluções com IA</title>
+  <title>Gerar Resolução</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --azul-principal: #00AFB7;
-      --azul-escuro: #007E85;
-      --cinza-claro: #f0f4f8;
-      --branco: #ffffff;
-      --texto: #333;
-    }
-
     body {
       font-family: 'Inter', sans-serif;
       margin: 0;
-      background-color: var(--cinza-claro);
+      padding: 0;
+      background-color: #eef2f7;
     }
 
     .container {
       max-width: 1200px;
       margin: 30px auto;
       padding: 20px;
-      background: var(--branco);
+      background: #fff;
       border-radius: 16px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
     }
 
     .header {
-      background: linear-gradient(to right, var(--azul-principal), var(--azul-escuro));
+      background: linear-gradient(to right, #1e88e5, #42a5f5);
       padding: 30px;
-      color: var(--branco);
+      color: white;
       border-radius: 12px;
       text-align: center;
     }
 
     .header h1 {
+      font-size: 2.2em;
       margin: 0;
     }
 
@@ -51,38 +46,44 @@
     .left-panel, .right-panel {
       flex: 1;
       min-width: 300px;
-      background-color: var(--cinza-claro);
+      background-color: #f9fafc;
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
     }
 
-    label {
-      font-weight: 600;
-      display: block;
-      margin-bottom: 5px;
+    h2 {
+      font-size: 1.4em;
+      color: #333;
+      margin-bottom: 20px;
     }
 
-    textarea {
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 600;
+    }
+
+    textarea, .editable-box {
       width: 100%;
+      min-height: 130px;
       padding: 15px;
       border: 1px solid #ccc;
       border-radius: 10px;
       font-size: 1em;
       resize: vertical;
-      background: var(--branco);
+      background: #fff;
       margin-bottom: 20px;
     }
 
-    textarea:focus {
+    textarea:focus, .editable-box:focus {
       outline: none;
-      border-color: var(--azul-principal);
-      box-shadow: 0 0 0 2px rgba(0, 175, 183, 0.3);
+      border-color: #1e88e5;
     }
 
     button {
-      background-color: var(--azul-principal);
-      color: var(--branco);
+      background-color: #1e88e5;
+      color: white;
       border: none;
       padding: 12px 24px;
       font-size: 1em;
@@ -92,34 +93,18 @@
     }
 
     button:hover {
-      background-color: var(--azul-escuro);
+      background-color: #1565c0;
     }
 
     .resolucao-area {
-      background-color: #e7f9fb;
+      margin-top: 40px;
+      background-color: #f0f6ff;
       padding: 20px;
       border-radius: 12px;
-      margin-top: 30px;
     }
 
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 999;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-content {
-      background: var(--branco);
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 600px;
-      width: 90%;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    .editable-box {
+      background-color: #ffffff;
     }
 
     .footer {
@@ -131,7 +116,7 @@
       border-radius: 0 0 12px 12px;
     }
 
-    @media (max-width: 768px) {
+    @media screen and (max-width: 768px) {
       .content {
         flex-direction: column;
       }
@@ -139,132 +124,156 @@
   </style>
 </head>
 <body>
-
-<div class="container">
-  <div class="header">
-    <h1>📝 Gerador de Resumos e Resoluções com IA</h1>
-  </div>
-
-  <div class="content">
-    <div class="left-panel">
-      <label for="questao">🧩 Questão do Cliente:</label>
-      <textarea id="questao" placeholder="Descreva o que o cliente solicitou..."></textarea>
-
-      <label for="resolucao">🔧 Resolução do Agente:</label>
-      <textarea id="resolucao" placeholder="Descreva como foi resolvido..."></textarea>
-
-      <button onclick="gerarResumo()">⚡ Gerar Resumo com IA</button>
+  <div class="container">
+    <div class="header">
+      <h1>📝 Gerar Resolução de Atendimento</h1>
     </div>
 
-    <div class="right-panel">
-      <h2>📘 Guia de Preenchimento</h2>
-      <p><b>🧩 Questão do Cliente:</b> Explique claramente a solicitação do cliente.</p>
-      <p><b>🔧 Resolução:</b> Informe como foi resolvido, o caminho no sistema e ações realizadas.</p>
-      <p><b>✅ Resultado:</b> Registre o desfecho, se o problema foi resolvido e as orientações.</p>
+    <div class="content">
+      <div class="left-panel">
+        <h2>Preencha as informações</h2>
+        <label for="resumoConversa">🗣️ Resumo da conversa com o cliente:</label>
+        <textarea id="resumoConversa" placeholder="Descreva aqui a conversa com o cliente..."></textarea>
+
+        <label for="resumoTecnico">🔧 Resumo técnico do agente:</label>
+        <textarea id="resumoTecnico" placeholder="Descreva as ações que você tomou no atendimento..."></textarea>
+
+        <button onclick="gerarResolucao()">⚡ Gerar Resolução</button>
+      </div>
+
+
+
+      
+      <div class="right-panel">
+  <h2>📘 Guia de Preenchimento da Resolução</h2>
+  <p style="margin-bottom: 15px;">
+    Utilize este guia para redigir uma resolução clara e completa com base no atendimento. 
+    Preencha cada campo com informações objetivas e organizadas.
+  </p>
+
+  <ul style="list-style-type: none; padding-left: 0;">
+
+    <li style="margin-bottom: 20px;">
+      <strong>🧩 1. Questão do Cliente:</strong><br>
+      <span style="color: #555;">
+        Descreva de forma clara o que o cliente solicitou, perguntou ou relatou como problema. Seja objetivo.
+      </span><br>
+      <em><u>Exemplo:</u> O cliente deseja um relatório de informes de rendimentos (Imposto de Renda) ou informações sobre como gerar um relatório de notas fiscais emitidas no ano anterior para um paciente, visando a declaração de imposto de renda.</em>
+    </li>
+
+    <li style="margin-bottom: 20px;">
+      <strong>🔎 2. Ações Realizadas:</strong><br>
+      <span style="color: #555;">
+        Informe quais orientações foram dadas ao cliente, ou quais verificações foram feitas até aquele momento.
+      </span><br>
+      <em><u>Exemplo:</u> Foi explicado ao cliente que o sistema possui uma funcionalidade específica para emitir a declaração de IR do paciente.</em>
+    </li>
+
+    <li style="margin-bottom: 20px;">
+      <strong>🧭 3. Passo a Passo no Sistema:</strong><br>
+      <span style="color: #555;">
+        Detalhe o caminho dentro do sistema, com clareza e em ordem cronológica.
+      </span><br>
+      <em><u>Exemplo:</u> Acesse o menu <strong>PRONTUÁRIO</strong> > clique na <strong>seta ao lado do botão "Paciente"</strong> no canto superior direito > selecione a opção <strong>"Declaração IRPF"</strong>.</em>
+    </li>
+
+    <li style="margin-bottom: 20px;">
+      <strong>🛠️ 4. Ações Técnicas (se houver):</strong><br>
+      <span style="color: #555;">
+        Especifique qualquer análise técnica feita: verificação de logs, testes, ajustes ou registros acessados.
+      </span><br>
+      <em><u>Exemplo:</u> Foi realizada verificação da função na base do cliente. Nenhuma inconsistência foi encontrada. Todos os dados estavam atualizados.</em>
+    </li>
+
+    <li style="margin-bottom: 20px;">
+      <strong>✅ 5. Resultado Final:</strong><br>
+      <span style="color: #555;">
+        Informe o desfecho do atendimento. O problema foi resolvido? O cliente conseguiu realizar a ação?
+      </span><br>
+      <em><u>Exemplo:</u> O cliente conseguiu emitir a declaração de IR com sucesso após a orientação.</em>
+    </li>
+
+  </ul>
+
+  <p style="margin-top: 25px; color: #333; font-style: italic;">
+    ✏️ Dica: escreva de forma clara, evite termos técnicos excessivos e sempre registre os caminhos e ações feitas. Isso ajuda na rastreabilidade e facilita futuras consultas.
+  </p>
+</div>
+
+
+      
+    </div>
+
+    <!-- Área de visualização da resolução -->
+    <div id="resolucaoGerada" class="resolucao-area" style="display:none;">
+      <h2>📄 Resolução Gerada (Editável)</h2>
+      <div id="resolucaoTexto" class="editable-box" contenteditable="true"></div>
+      <br>
+      <button onclick="enviarParaSheets()">🛄 Enviar para Google Sheets</button>
+    </div>
+
+    <div class="footer">
+      Desenvolvido por Nadson - Analista de Suporte IGUT
     </div>
   </div>
 
-  <div class="resolucao-area" id="areaResultado" style="display:none;">
-    <h2>📄 Resolução Gerada</h2>
-    <div id="textoResultado" contenteditable="true" style="background:white; padding:15px; border-radius:8px; border:1px solid #ccc;"></div>
-    <br>
-    <button onclick="abrirModal()">👁️ Visualizar e Editar</button>
-  </div>
-</div>
+  <script>
+    const openaiApiKey = 'SUA_CHAVE_DE_API_AQUI';
 
-<!-- Modal -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h3>📝 Editar Resolução Antes de Enviar</h3>
-    <textarea id="textoModal" rows="10" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;"></textarea>
-    <br><br>
-    <button onclick="enviarParaSheets()">🛄 Enviar para Google Sheets</button>
-    <button onclick="fecharModal()" style="background-color:#888;">❌ Fechar</button>
-  </div>
-</div>
+    async function gerarResolucao() {
+      const resumoConversa = document.getElementById('resumoConversa').value.trim();
+      const resumoTecnico = document.getElementById('resumoTecnico').value.trim();
 
-<div class="footer">
-  Desenvolvido por Nadson - Analista de Suporte IGUT
-</div>
+      if (!resumoConversa || !resumoTecnico) {
+        alert("Por favor, preencha ambos os campos.");
+        return;
+      }
 
-<script>
-const openaiKey = "SUA_API_OPENAI";
-const googleSheetsURL = "URL_DO_SEU_WEBHOOK_GOOGLE_SHEETS";
+      const prompt = `Resumo da conversa com o cliente: ${resumoConversa}\nResumo técnico do agente: ${resumoTecnico}\nGere uma resolução clara, estruturada e profissional para documentar o atendimento realizado.`;
 
-async function gerarResumo() {
-  const questao = document.getElementById("questao").value.trim();
-  const resolucao = document.getElementById("resolucao").value.trim();
+      const response = await fetch('https://api.openai.com/v1/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${openaiApiKey}`
+        },
+        body: JSON.stringify({
+          model: 'text-davinci-003',
+          prompt: prompt,
+          max_tokens: 200
+        })
+      });
 
-  if (!questao || !resolucao) {
-    alert("Preencha os dois campos.");
-    return;
-  }
+      const data = await response.json();
+      const resolucao = data.choices[0].text.trim();
 
-  const prompt = `
-Gere uma resolução de atendimento profissional com este formato:
+      document.getElementById('resolucaoTexto').textContent = resolucao;
+      document.getElementById('resolucaoGerada').style.display = 'block';
+    }
 
-📝 Questão do Cliente:
-${questao}
+    async function enviarParaSheets() {
+      const resolucaoTexto = document.getElementById('resolucaoTexto').textContent.trim();
 
-🔧 Solução Aplicada:
-${resolucao}
+      if (!resolucaoTexto) {
+        alert("A resolução está vazia.");
+        return;
+      }
 
-✅ Resultado Final:
-Descreva se foi solucionado, o desfecho e qualquer orientação adicional.
-`;
+      const response = await fetch('https://script.google.com/macros/s/SEU_SCRIPT_ID/exec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ texto: resolucaoTexto })
+      });
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${openaiKey}`
-    },
-    body: JSON.stringify({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.3,
-      max_tokens: 800
-    })
-  });
-
-  const data = await response.json();
-  const resultado = data.choices[0].message.content;
-
-  document.getElementById("textoResultado").innerText = resultado;
-  document.getElementById("areaResultado").style.display = "block";
-}
-
-function abrirModal() {
-  const texto = document.getElementById("textoResultado").innerText;
-  document.getElementById("textoModal").value = texto;
-  document.getElementById("modal").style.display = "flex";
-}
-
-function fecharModal() {
-  document.getElementById("modal").style.display = "none";
-}
-
-async function enviarParaSheets() {
-  const textoFinal = document.getElementById("textoModal").value.trim();
-
-  if (!textoFinal) {
-    alert("O texto está vazio.");
-    return;
-  }
-
-  await fetch(googleSheetsURL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      resolucao: textoFinal,
-      data: new Date().toLocaleString()
-    })
-  });
-
-  alert("✅ Enviado para Google Sheets com sucesso!");
-  fecharModal();
-}
-</script>
-
+      const data = await response.json();
+      if (data.success) {
+        alert('✅ Resolução enviada com sucesso!');
+      } else {
+        alert('❌ Erro ao enviar resolução.');
+      }
+    }
+  </script>
 </body>
 </html>
