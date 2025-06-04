@@ -1,317 +1,270 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Resumos e Resoluções com IA</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-        /* Custom styles for textareas */
-        textarea {
-            transition: all 0.3s ease;
-        }
-        textarea:focus {
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-        }
-        /* Modal animation */
-        .modal {
-            animation: fadeIn 0.3s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* Toast notification */
-        .toast {
-            animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-in 2.7s forwards;
-        }
-        @keyframes slideIn {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes fadeOut {
-            to { opacity: 0; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Resumos e Resoluções com IA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul-principal: #00AFB7;
+      --azul-escuro: #007E85;
+      --cinza-claro: #f0f4f8;
+      --branco: #ffffff;
+      --texto: #333;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background-color: var(--cinza-claro);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+      background: var(--branco);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    .header {
+      background: linear-gradient(to right, var(--azul-principal), var(--azul-escuro));
+      padding: 30px;
+      color: var(--branco);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .left-panel, .right-panel {
+      flex: 1;
+      min-width: 300px;
+      background-color: var(--cinza-claro);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 1em;
+      resize: vertical;
+      background: var(--branco);
+      margin-bottom: 20px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--azul-principal);
+      box-shadow: 0 0 0 2px rgba(0, 175, 183, 0.3);
+    }
+
+    button {
+      background-color: var(--azul-principal);
+      color: var(--branco);
+      border: none;
+      padding: 12px 24px;
+      font-size: 1em;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--azul-escuro);
+    }
+
+    .resolucao-area {
+      background-color: #e7f9fb;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 30px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--branco);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding: 20px;
+      background-color: #333;
+      color: white;
+      border-radius: 0 0 12px 12px;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Fixed Header -->
-    <header class="sticky top-0 z-10 bg-blue-600 text-white shadow-md">
-        <div class="container mx-auto px-4 py-4">
-            <h1 class="text-2xl md:text-3xl font-bold">Gerador de Resumos e Resoluções com IA</h1>
-            <p class="text-blue-100 text-sm mt-1">Solução inteligente para atendimento ao cliente</p>
-        </div>
-    </header>
+<body>
 
-    <main class="container mx-auto px-4 py-8 max-w-6xl">
-        <!-- Guide Box -->
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8 shadow-sm">
-            <h2 class="text-xl font-semibold text-blue-800 mb-4 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Guia de Preenchimento para Agentes
-            </h2>
-            <div class="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
-                <div class="bg-white p-4 rounded-lg shadow-xs">
-                    <h3 class="font-medium text-blue-700 mb-2 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Questão do Cliente
-                    </h3>
-                    <ul class="list-disc pl-5 space-y-1">
-                        <li>Informe claramente qual foi a solicitação ou dúvida apresentada pelo cliente.</li>
-                        <li>Seja objetivo, descrevendo o problema ou demanda relatada.</li>
-                        <li>Mantenha o foco na perspectiva do cliente.</li>
-                    </ul>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-xs">
-                    <h3 class="font-medium text-blue-700 mb-2 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        Resolução do Agente
-                    </h3>
-                    <ul class="list-disc pl-5 space-y-1">
-                        <li>Detalhe qual foi a solução aplicada ou os passos informados ao cliente.</li>
-                        <li>Para problemas recorrentes, padronize a resposta de forma clara.</li>
-                        <li>Exemplo: <span class="italic">"Para emitir a declaração IRPF, acesse a aba PRONTUÁRIO > Clique na seta ao lado do botão Paciente > Escolha a opção Declaração IRPF."</span></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+<div class="container">
+  <div class="header">
+    <h1>📝 Gerador de Resumos e Resoluções com IA</h1>
+  </div>
 
-        <!-- Input Fields -->
-        <div class="grid md:grid-cols-2 gap-8 mb-8">
-            <!-- Client Question -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <label for="client-question" class="block text-lg font-medium text-gray-800 mb-3 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Questão do Cliente
-                </label>
-                <textarea id="client-question" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Descreva aqui o que o cliente está solicitando, conforme identificado na conversa ou no atendimento."></textarea>
-            </div>
-            
-            <!-- Agent Resolution -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <label for="agent-resolution" class="block text-lg font-medium text-gray-800 mb-3 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Resolução do Agente
-                </label>
-                <textarea id="agent-resolution" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Descreva aqui, de forma resumida, qual foi a resolução aplicada ou informada ao cliente."></textarea>
-            </div>
-        </div>
+  <div class="content">
+    <div class="left-panel">
+      <label for="questao">🧩 Questão do Cliente:</label>
+      <textarea id="questao" placeholder="Descreva o que o cliente solicitou..."></textarea>
 
-        <!-- Action Buttons -->
-        <div class="flex flex-wrap gap-4 justify-center md:justify-start mb-12">
-            <button id="generate-btn" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                Gerar Resumo Detalhado com IA
-            </button>
-            <button id="clear-btn" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg shadow-sm transition-colors duration-300 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                Limpar Campos
-            </button>
-            <button id="view-btn" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg shadow-md transition-colors duration-300 opacity-70 cursor-not-allowed flex items-center" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Visualizar Resultado
-            </button>
-        </div>
+      <label for="resolucao">🔧 Resolução do Agente:</label>
+      <textarea id="resolucao" placeholder="Descreva como foi resolvido..."></textarea>
 
-        <!-- Modal (hidden by default) -->
-        <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
-            <div class="modal bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
-                <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-2xl font-bold text-gray-800 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        Resumo Gerado pela IA
-                    </h2>
-                </div>
-                <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 160px)">
-                    <div id="ai-result" class="prose max-w-none">
-                        <!-- AI generated content will appear here -->
-                        <p class="text-gray-500 italic">O resultado aparecerá aqui após a geração.</p>
-                    </div>
-                </div>
-                <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
-                    <button id="edit-btn" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        Editar
-                    </button>
-                    <button id="submit-btn" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg shadow transition-colors flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                        </svg>
-                        Enviar para Google Sheets
-                    </button>
-                </div>
-            </div>
-        </div>
+      <button onclick="gerarResumo()">⚡ Gerar Resumo com IA</button>
+    </div>
 
-        <!-- Success Toast (hidden by default) -->
-        <div id="success-toast" class="toast fixed bottom-6 right-6 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hidden">
-            <div class="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Resumo enviado com sucesso para o Google Sheets!
-            </div>
-        </div>
-    </main>
+    <div class="right-panel">
+      <h2>📘 Guia de Preenchimento</h2>
+      <p><b>🧩 Questão do Cliente:</b> Explique claramente a solicitação do cliente.</p>
+      <p><b>🔧 Resolução:</b> Informe como foi resolvido, o caminho no sistema e ações realizadas.</p>
+      <p><b>✅ Resultado:</b> Registre o desfecho, se o problema foi resolvido e as orientações.</p>
+    </div>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM Elements
-            const clientQuestion = document.getElementById('client-question');
-            const agentResolution = document.getElementById('agent-resolution');
-            const generateBtn = document.getElementById('generate-btn');
-            const clearBtn = document.getElementById('clear-btn');
-            const viewBtn = document.getElementById('view-btn');
-            const resultModal = document.getElementById('result-modal');
-            const aiResult = document.getElementById('ai-result');
-            const editBtn = document.getElementById('edit-btn');
-            const submitBtn = document.getElementById('submit-btn');
-            const successToast = document.getElementById('success-toast');
-            
-            // Enable/disable View button based on input
-            [clientQuestion, agentResolution].forEach(field => {
-                field.addEventListener('input', () => {
-                    viewBtn.disabled = !(clientQuestion.value.trim() && agentResolution.value.trim());
-                    viewBtn.classList.toggle('opacity-70', viewBtn.disabled);
-                    viewBtn.classList.toggle('cursor-not-allowed', viewBtn.disabled);
-                    if (!viewBtn.disabled) {
-                        viewBtn.classList.remove('opacity-70');
-                        viewBtn.classList.remove('cursor-not-allowed');
-                    }
-                });
-            });
-            
-            // Generate AI Summary (mock function)
-            generateBtn.addEventListener('click', function() {
-                if (!clientQuestion.value.trim() || !agentResolution.value.trim()) {
-                    alert('Por favor, preencha ambos os campos antes de gerar o resumo.');
-                    return;
-                }
-                
-                // Simulate AI processing
-                generateBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Processando...';
-                
-                setTimeout(() => {
-                    generateBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>Gerar Resumo Detalhado com IA';
-                    
-                    // Mock AI response
-                    const summary = `
-                        <h3 class="text-blue-700 font-medium">Resumo do Atendimento</h3>
-                        <p><strong>Solicitação do cliente:</strong> ${clientQuestion.value}</p>
-                        <p class="mt-2"><strong>Solução aplicada:</strong> ${agentResolution.value}</p>
-                        
-                        <h3 class="text-blue-700 font-medium mt-4">Detalhes Técnicos</h3>
-                        <p>O procedimento padrão para este tipo de solicitação envolve os seguintes passos:</p>
-                        <ol class="list-decimal pl-5 mt-2 space-y-1">
-                            <li>Verificar as credenciais do cliente no sistema</li>
-                            <li>Acessar a seção correspondente à solicitação</li>
-                            <li>Executar os procedimentos necessários</li>
-                            <li>Confirmar a resolução com o cliente</li>
-                        </ol>
-                        
-                        <div class="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                            <p class="text-sm"><strong>Modelo de resposta recomendada:</strong> "Conforme alinhado, [descrever solução aplicada]. Caso necessite de algo adicional, estamos à disposição para auxiliar."</p>
-                        </div>
-                    `;
-                    
-                    aiResult.innerHTML = summary;
-                    viewBtn.disabled = false;
-                    viewBtn.classList.remove('opacity-70', 'cursor-not-allowed');
-                }, 2000);
-            });
-            
-            // Clear all fields
-            clearBtn.addEventListener('click', function() {
-                clientQuestion.value = '';
-                agentResolution.value = '';
-                aiResult.innerHTML = '<p class="text-gray-500 italic">O resultado aparecerá aqui após a geração.</p>';
-                viewBtn.disabled = true;
-                viewBtn.classList.add('opacity-70', 'cursor-not-allowed');
-            });
-            
-            // View result (opens modal)
-            viewBtn.addEventListener('click', function() {
-                resultModal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            });
-            
-            // Close modal when clicking outside
-            resultModal.addEventListener('click', function(e) {
-                if (e.target === resultModal) {
-                    resultModal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                }
-            });
-            
-            // Submit to Google Sheets (mock function)
-            submitBtn.addEventListener('click', function() {
-                // Simulate API call
-                submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Enviando...';
-                
-                setTimeout(() => {
-                    submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>Enviar para Google Sheets';
-                    
-                    resultModal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                    
-                    // Show success toast
-                    successToast.classList.remove('hidden');
-                    setTimeout(() => {
-                        successToast.classList.add('hidden');
-                    }, 3000);
-                }, 1500);
-            });
-            
-            // Toggle edit mode
-            let isEditing = false;
-            editBtn.addEventListener('click', function() {
-                if (!isEditing) {
-                    // Enable editing
-                    aiResult.setAttribute('contenteditable', 'true');
-                    aiResult.classList.add('border', 'border-blue-300', 'p-3', 'rounded');
-                    editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Salvar Edições';
-                } else {
-                    // Disable editing
-                    aiResult.removeAttribute('contenteditable');
-                    aiResult.classList.remove('border', 'border-blue-300', 'p-3', 'rounded');
-                    editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>Editar';
-                }
-                isEditing = !isEditing;
-            });
-        });
-        
-        // Keyboard shortcut to close modal with Esc key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !document.getElementById('result-modal').classList.contains('hidden')) {
-                document.getElementById('result-modal').classList.add('hidden');
-                document.body.style.overflow = '';
-            }
-        });
-    </script>
+  <div class="resolucao-area" id="areaResultado" style="display:none;">
+    <h2>📄 Resolução Gerada</h2>
+    <div id="textoResultado" contenteditable="true" style="background:white; padding:15px; border-radius:8px; border:1px solid #ccc;"></div>
+    <br>
+    <button onclick="abrirModal()">👁️ Visualizar e Editar</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>📝 Editar Resolução Antes de Enviar</h3>
+    <textarea id="textoModal" rows="10" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;"></textarea>
+    <br><br>
+    <button onclick="enviarParaSheets()">🛄 Enviar para Google Sheets</button>
+    <button onclick="fecharModal()" style="background-color:#888;">❌ Fechar</button>
+  </div>
+</div>
+
+<div class="footer">
+  Desenvolvido por Nadson - Analista de Suporte IGUT
+</div>
+
+<script>
+const openaiKey = "SUA_API_OPENAI";
+const googleSheetsURL = "URL_DO_SEU_WEBHOOK_GOOGLE_SHEETS";
+
+async function gerarResumo() {
+  const questao = document.getElementById("questao").value.trim();
+  const resolucao = document.getElementById("resolucao").value.trim();
+
+  if (!questao || !resolucao) {
+    alert("Preencha os dois campos.");
+    return;
+  }
+
+  const prompt = `
+Gere uma resolução de atendimento profissional com este formato:
+
+📝 Questão do Cliente:
+${questao}
+
+🔧 Solução Aplicada:
+${resolucao}
+
+✅ Resultado Final:
+Descreva se foi solucionado, o desfecho e qualquer orientação adicional.
+`;
+
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${openaiKey}`
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.3,
+      max_tokens: 800
+    })
+  });
+
+  const data = await response.json();
+  const resultado = data.choices[0].message.content;
+
+  document.getElementById("textoResultado").innerText = resultado;
+  document.getElementById("areaResultado").style.display = "block";
+}
+
+function abrirModal() {
+  const texto = document.getElementById("textoResultado").innerText;
+  document.getElementById("textoModal").value = texto;
+  document.getElementById("modal").style.display = "flex";
+}
+
+function fecharModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+async function enviarParaSheets() {
+  const textoFinal = document.getElementById("textoModal").value.trim();
+
+  if (!textoFinal) {
+    alert("O texto está vazio.");
+    return;
+  }
+
+  await fetch(googleSheetsURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      resolucao: textoFinal,
+      data: new Date().toLocaleString()
+    })
+  });
+
+  alert("✅ Enviado para Google Sheets com sucesso!");
+  fecharModal();
+}
+</script>
+
 </body>
 </html>
