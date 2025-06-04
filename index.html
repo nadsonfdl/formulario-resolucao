@@ -228,13 +228,13 @@
         return;
       }
 
-      const prompt = `Resumo da conversa com o cliente: ${resumoConversa}\nResumo técnico do agente: ${resumoTecnico}\nGere uma resolução clara, estruturada e profissional para documentar o atendimento realizado.`;
+      const prompt = Resumo da conversa com o cliente: ${resumoConversa}\nResumo técnico do agente: ${resumoTecnico}\nGere uma resolução clara, estruturada e profissional para documentar o atendimento realizado.;
 
       const response = await fetch('https://api.openai.com/v1/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${openaiApiKey}`
+          'Authorization': Bearer ${openaiApiKey}
         },
         body: JSON.stringify({
           model: 'text-davinci-003',
